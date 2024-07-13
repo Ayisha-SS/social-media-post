@@ -33,6 +33,7 @@ function CreatePost() {
       setDescription('');
       setCategory('');
       setImage(null);
+      alert('post created successfully')
     } catch(error) {
       console.error('Error creating post:',error);
       setError('Failed to create post. Please try again.');

@@ -23,6 +23,8 @@ function Posts() {
       });
   }, []);
 
+
+
   if (error) {
     return <div>Error loading posts. Please try again later.</div>;
   }

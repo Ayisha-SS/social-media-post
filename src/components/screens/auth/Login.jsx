@@ -1,9 +1,41 @@
-import React from 'react'
+import React, { useState } from 'react';
 import {Helmet} from "react-helmet";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
 
 
 function Login() {
+
+    const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/v1/auth/token/', {
+        username,
+        password
+      });
+      
+      // Assuming response.data contains tokens (access and refresh)
+      const { access, refresh } = response.data;
+
+      // Store tokens securely (e.g., in localStorage)
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+
+      // Redirect or perform actions after successful login
+      // Example: redirect to dashboard
+      window.location.replace('/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Failed to login. Please check your credentials.');
+    }
+  };
+
   return (
     <>
     <Helmet>
@@ -12,13 +44,26 @@ function Login() {
     <div className='bg-gradient-to-r from-pink-500  to-purple-900  px-10 py-20 flex items-center justify-center min-h-screen'>
         <div className='bg-gradient-to-r from-purple-900 to-pink-500    flex flex-col justify-center items-center py-10 px-20'>
             <h1 className='text-[#fff] text-5xl font-extrabold mb-3'>Login</h1>
-            <form action="" className=''>
+            <form action="" className='' onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-2'>
-                    <input type="text" placeholder='Username' className='w-full rounded-md py-4 pl-5 pr-20 border-none'/>
+                    <input 
+                        type="text" 
+                        placeholder='Username' 
+                        className='w-full rounded-md py-4 pl-5 pr-20 border-none'
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
                
-                    <input type="password" placeholder='Password' className='w-full rounded-md py-4 pl-5 pr-20 border-none'/>
+                    <input 
+                        type="password" 
+                        placeholder='Password' 
+                        className='w-full rounded-md py-4 pl-5 pr-20 border-none'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                 </div>
                 <button type="submit" className='w-full bg-gradient-to-r from-purple-900 to-pink-500 border border-slate-400 py-4 pl-5 pr-20 rounded-md mt-5 text-slate-400 font-medium text-xl'>Login</button>
+                {error && <p>{error}</p>}
             </form>
             <div>
                 <h4>New to Postfun?

@@ -85,19 +85,29 @@ function MyPost() {
     const fetchPosts = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/createpost/');
-        setPosts(response.data); // Assuming your API response structure has 'data' field containing posts
+        console.log('API Response:', response.data);
+        setPosts(response.data); 
         setLoading(false);
       } catch (error) {
         console.error('Error fetching posts:', error);
-        setLoading(false); // Handle error state
+        setLoading(false); 
       }
     };
 
     fetchPosts();
   }, []);
 
+  const deletePost = async (postId) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/v1/createpost/?id=${postId}`);
+      setPosts(posts.filter(post => post.id !== postId));
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+
   if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator while fetching data
+    return <div>Loading...</div>; 
   }
   console.log('Posts:', posts); 
 
@@ -111,12 +121,12 @@ function MyPost() {
       </div>
 
       <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center'>
-        {posts && posts.length > 0 ? (
+      {Array.isArray(posts) && posts.length > 0 ? (
           posts.map(post => (
             <div key={post.id} className='flex flex-col py-2 w-full items-start h-[500px] p-2'>
 
               <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-                <Link to={`/view/${post.id}`}>
+                <Link to={`/create/view/${post.id}`}>
                   <img src={post.image || img1} alt={post.title} className='w-full h-full object-cover' />
                 </Link>
               </div>
@@ -128,6 +138,8 @@ function MyPost() {
               </div>
 
               <span className='text-xl font-normal'>{post.title}</span>
+              <button onClick={() => deletePost(post.id)}>Delete</button>
+              <h4>{new Date(post.created_at).toLocaleString()}</h4>
             </div>
           ))
         ) : (
