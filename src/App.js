@@ -8,7 +8,13 @@ import CreatePost from './components/screens/post/CreatePost';
 import View from './components/screens/home/View';
 import ViewPost from './components/screens/post/ViewPost';
 
+
+
+
 function App() {
+
+
+  
   return (
     <Router>
       <Routes>
@@ -22,6 +28,7 @@ function App() {
       </Routes>
 
     </Router>
+
   );
 }
 
