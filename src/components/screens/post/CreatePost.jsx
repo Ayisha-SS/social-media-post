@@ -10,6 +10,7 @@ function CreatePost() {
   const [image,setImage] = useState(null);
   const [error,setError] = useState(null);
 
+
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   }
@@ -22,12 +23,18 @@ function CreatePost() {
     formData.append("description",description);
     formData.append("image",image);
 
+    const token = localStorage.getItem('accessToken');
+    console.log('Retrieved token:', token);
+
     try {
       const response = await axios.post('http://localhost:8000/api/v1/createpost/',formData,{
         headers:{
           'Content-Type':'multipart/form-data',
+          'Authorization':`Bearer ${token}`
         },
       });
+
+
       console.log('Post created successfully:', response.data);
       setTitle('');
       setDescription('');

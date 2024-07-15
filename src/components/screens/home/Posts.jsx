@@ -1,25 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaRegCircleUser } from "react-icons/fa6";
-import { CiHeart } from "react-icons/ci";
 import { FaRegComment } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
 import axios from 'axios';
 
-
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIwOTU4MzE5LCJpYXQiOjE3MjA5NTgwMTksImp0aSI6IjVjYTgxYTNjY2U2NDQ4Mzk5YTM3YTJlYTNiNjc0NDQyIiwidXNlcl9pZCI6OX0.2AMC6dlt8vgqP7OkN5KimvS6WmN2i6WGItbQX3PRJ6g';
 
 function Posts() {
 
   const [posts,setPosts] = useState([]);
   const [error, setError] = useState(null);
+  const [likedPost, setLikedPost] = useState({});
+ 
 
   useEffect(() => {
-    // axios.get('http://localhost:8000/api/v1/posts/', {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
+  
      axios.get('http://localhost:8000/api/v1/posts/')
       .then(response => {
         setPosts(response.data.data);
@@ -29,6 +25,10 @@ function Posts() {
       });
   }, []);
 
+const handleLike = (postId) => {
+  setLikedPost((prevLikedPosts) => ({...prevLikedPosts,[postId]:!prevLikedPosts[postId]}));
+
+};
 
 
   if (error) {
@@ -38,7 +38,7 @@ function Posts() {
   return (
     <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center '>
       {posts.map(post => (
-       <div className='flex flex-col py-2 w-full  items-start h-[500px] p-2 md:h-[400px]'>
+       <div className='flex flex-col py-2 w-full  items-start h-[500px] p-2 '>
         <div className='flex items-center gap-5'>
           <span className=''><FaRegCircleUser size={50} /></span>
           <span>
@@ -52,7 +52,11 @@ function Posts() {
           </Link>
         </div>
         <div className='flex gap-3 mt-3'>
-          <span><CiHeart size={30}/></span>
+          <span>
+            <FaHeart size={25}
+              style={{ fill:likedPost[post.id] ? 'red':'gray'}}
+              onClick={() => handleLike(post.id)}/>
+            </span>
           <span><FaRegComment size={25}/></span>
           <span><SiSlideshare size={25}/></span>
         </div>

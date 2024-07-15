@@ -12,6 +12,7 @@ function Login() {
   const [error, setError] = useState(null);
   const [userTab, setUserTab] = useState(true)
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,12 +29,17 @@ function Login() {
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
 
-      // Redirect or perform actions after successful login
-      // Example: redirect to dashboard
+      if (userTab) {
+        localStorage.setItem('userRole', 'user');
+      } else {
+        localStorage.setItem('userRole', 'admin');
+      }
+      
+     
       if (userTab) {
         window.location.replace('/');
     } else {
-        window.location.replace('/admin-dashboard');
+        window.location.replace('/');
     }
     } catch (error) {
       console.error('Login error:', error);

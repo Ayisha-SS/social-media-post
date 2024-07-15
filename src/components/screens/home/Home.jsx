@@ -4,6 +4,8 @@ import NavBar from '../../includes/navBar/NavBar';
 import Posts from './Posts';
 
 function Home() {
+
+
   return (
     <>
         <Helmet>
