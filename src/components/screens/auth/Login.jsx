@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
-
 function Login() {
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [userTab, setUserTab] = useState(true)
@@ -16,16 +16,31 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
+
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/auth/token/', {
-        username,
-        password
+      console.log('Login request:', {
+        email: email,
+        password: password,
       });
+
+      const requestData = {
+        email: email,
+        password: password,
+      };
+      
+      const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData,{
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('User data:', response);
 
       const { access, refresh } = response.data;
 
       localStorage.setItem('accessToken', access);
-      localStorage.setItem('refreshToken', refresh);
+      // localStorage.setItem('refreshToken', refresh);
 
       if (userTab) {
         localStorage.setItem('userRole', 'user');
@@ -83,8 +98,8 @@ function Login() {
                 type="text"
                 placeholder='Username'
                 className='w-full rounded-md py-4 pl-5 pr-20 border-none'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <input

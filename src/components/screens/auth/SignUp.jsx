@@ -17,14 +17,29 @@ function SignUp() {
         e.preventDefault();
 
         try {
+            console.log('Login request:', {
+                email: email,
+                password: password,
+                name: username
+            });
+
             const response = await axios.post('http://localhost:8000/api/v1/auth/create/', {
                 email: email,
                 password: password,
                 name: username
             });
 
-            console.log("Signup successfully:", response.data);
-            navigate('/login');
+
+            // console.log("Signup successfully:", response.data);
+            // navigate('/login');
+
+            if (response.status === 201) {
+                console.log("Account created successfully");
+                // Redirect to login page
+                window.location.replace('/login');
+              } else {
+                setError(response.data.error);
+              }
         } catch (error) {
             console.log('Error signing up:', error);
             setError('Failed to sign up.Please try again.')
@@ -37,7 +52,7 @@ function SignUp() {
                 <title>Social Media|SignUp</title>
             </Helmet>
             <div className='bg-gradient-to-r from-pink-500  to-purple-900  px-10 py-20 flex items-center justify-center min-h-screen'>
-                <div className='bg-gradient-to-r from-purple-900 to-pink-500    flex flex-col justify-center items-center py-10 px-20'>
+                <div className='bg-gradient-to-r from-purple-900 to-pink-500 flex flex-col justify-center items-center py-10 px-20'>
                     <h1 className='text-[#fff] text-5xl font-extrabold mb-3'>SignUp</h1>
                     <form action="" className='' onSubmit={handleSubmit}>
                         <div className='flex flex-col gap-2'>
