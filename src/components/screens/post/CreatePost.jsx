@@ -23,6 +23,9 @@ function CreatePost() {
     formData.append("description",description);
     formData.append("image",image);
 
+    // const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+    // formData.append("created_by", adminUser.id);
+
     const token = localStorage.getItem('accessToken');
     console.log('Retrieved token:', token);
 
@@ -56,9 +59,9 @@ function CreatePost() {
         </div>
       </div>
 
-      <div className='wrapper py-16 flex flex-col items-center justify-center'>
-        <div className='border border-slate-500 bg-slate-300 p-5 w-[70%] '>
-          <form action="" className='flex flex-col gap-5' 
+      <div className='wrapper py-16 flex flex-col items-center justify-center  max-[540px]:justify-start'>
+        <div className='border border-slate-500 bg-slate-300 p-5 w-[70%] max-[768px]:w-[85%] '>
+          <form action="" className='flex flex-col gap-5 max-[480px]:gap-3' 
             onSubmit={handleSubmit}>
             <div className='flex flex-col gap-3'>
               <label htmlFor="title" className='text-base font-medium '>Title</label>
@@ -85,7 +88,7 @@ function CreatePost() {
               {/* <input type="text" /> */}
               <textarea name="" 
                 id="description" 
-                className='rounded-lg h-60 px-2 focus:outline-none'
+                className='rounded-lg h-60 px-2 focus:outline-none max-[540px]:h-40'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required

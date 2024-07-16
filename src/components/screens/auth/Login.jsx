@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -7,7 +7,7 @@ import axios from 'axios';
 
 function Login() {
 
-    const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [userTab, setUserTab] = useState(true)
@@ -21,11 +21,9 @@ function Login() {
         username,
         password
       });
-      
-      // Assuming response.data contains tokens (access and refresh)
+
       const { access, refresh } = response.data;
 
-      // Store tokens securely (e.g., in localStorage)
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
 
@@ -34,13 +32,13 @@ function Login() {
       } else {
         localStorage.setItem('userRole', 'admin');
       }
-      
-     
+
+
       if (userTab) {
         window.location.replace('/');
-    } else {
+      } else {
         window.location.replace('/');
-    }
+      }
     } catch (error) {
       console.error('Login error:', error);
       setError('Failed to login. Please check your credentials.');
@@ -49,64 +47,64 @@ function Login() {
 
   const switchToUserTab = () => {
     setUserTab(true);
-};
+  };
 
-const switchToAdminTab = () => {
+  const switchToAdminTab = () => {
     setUserTab(false);
-};
+  };
 
   return (
     <>
-    <Helmet>
-      <title>Social Media|Login</title>
-    </Helmet>
-    <div className='bg-gradient-to-r from-pink-500  to-purple-900  px-10 py-20 flex items-center justify-center min-h-screen'>
+      <Helmet>
+        <title>Social Media|Login</title>
+      </Helmet>
+      <div className='bg-gradient-to-r from-pink-500  to-purple-900  px-10 py-20 flex items-center justify-center min-h-screen'>
         <div className='bg-gradient-to-r from-purple-900 to-pink-500    flex flex-col justify-center items-center py-10 px-20'>
-            <h1 className='text-[#fff] text-5xl font-extrabold mb-3'>Login</h1>
+          <h1 className='text-[#fff] text-5xl font-extrabold mb-3'>Login</h1>
 
-            <div className='flex gap-5 mb-5'>
-                        <button
-                            className={`py-2 px-4 rounded-md focus:outline-none ${userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
-                            onClick={switchToUserTab}
-                        >
-                            User
-                        </button>
-                        <button
-                            className={`py-2 px-4 rounded-md focus:outline-none ${!userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
-                            onClick={switchToAdminTab}
-                        >
-                            Admin
-                        </button>
-                    </div>
+          <div className='flex gap-5 mb-5'>
+            <button
+              className={`py-2 px-4 rounded-md focus:outline-none ${userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
+              onClick={switchToUserTab}
+            >
+              User
+            </button>
+            <button
+              className={`py-2 px-4 rounded-md focus:outline-none ${!userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
+              onClick={switchToAdminTab}
+            >
+              Admin
+            </button>
+          </div>
 
-            <form action="" className='' onSubmit={handleSubmit}>
-                <div className='flex flex-col gap-2'>
-                    <input 
-                        type="text" 
-                        placeholder='Username' 
-                        className='w-full rounded-md py-4 pl-5 pr-20 border-none'
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-               
-                    <input 
-                        type="password" 
-                        placeholder='Password' 
-                        className='w-full rounded-md py-4 pl-5 pr-20 border-none'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit" className='w-full bg-gradient-to-r from-purple-900 to-pink-500 border border-slate-400 py-4 pl-5 pr-20 rounded-md mt-5 text-slate-400 font-medium text-xl'>Login</button>
-                {error && <p>{error}</p>}
-            </form>
-            <div>
-                <h4>New to Postfun?
-                    <Link to="/signup" className="text-blue-500 ml-1">Sign Up</Link>
-                </h4>
+          <form action="" className='' onSubmit={handleSubmit}>
+            <div className='flex flex-col gap-2'>
+              <input
+                type="text"
+                placeholder='Username'
+                className='w-full rounded-md py-4 pl-5 pr-20 border-none'
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+
+              <input
+                type="password"
+                placeholder='Password'
+                className='w-full rounded-md py-4 pl-5 pr-20 border-none'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
+            <button type="submit" className='w-full bg-gradient-to-r from-purple-900 to-pink-500 border border-slate-400 py-4 pl-5 pr-20 rounded-md mt-5 text-slate-400 font-medium text-xl'>Login</button>
+            {error && <p>{error}</p>}
+          </form>
+          <div>
+            <h4>New to Postfun?
+              <Link to="/signup" className="text-blue-500 ml-1">Sign Up</Link>
+            </h4>
+          </div>
         </div>
-    </div>
+      </div>
     </>
   )
 }

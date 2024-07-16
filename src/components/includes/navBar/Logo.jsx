@@ -6,7 +6,7 @@ function Logo() {
     <div>
          <div>
           <Link to="/">
-            <h1 className='text-4xl text-gradient'>.PoStFuN</h1>
+            <h1 className='text-4xl  text-gradient max-[640px]:text-[32px] sm:text-3xl'>.PoStFuN</h1>
           </Link>
         </div>
     </div>

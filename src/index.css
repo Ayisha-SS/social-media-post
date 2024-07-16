@@ -12,3 +12,10 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  @media (max-width: 480px) {
+    .max-480 {
+    @apply text-base
+    }
+  }
+
