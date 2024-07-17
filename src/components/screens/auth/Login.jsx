@@ -25,7 +25,7 @@ function Login() {
       });
 
       const requestData = {
-        email: email,
+        email: username,
         password: password,
       };
       
@@ -98,8 +98,8 @@ function Login() {
                 type="text"
                 placeholder='Username'
                 className='w-full rounded-md py-4 pl-5 pr-20 border-none'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
 
               <input
