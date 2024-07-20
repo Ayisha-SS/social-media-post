@@ -26,10 +26,11 @@ function SignUp() {
             const response = await axios.post('http://localhost:8000/api/v1/auth/create/', {
                 email: email,
                 password: password,
-                name: username
+                name: username,
+                is_active: true
             });
 
-
+            // console.log('activat',is_active);
             // console.log("Signup successfully:", response.data);
             // navigate('/login');
 
@@ -40,8 +41,9 @@ function SignUp() {
               } else {
                 setError(response.data.error);
               }
+              console.log('Signup request data:', { email, password, username });
         } catch (error) {
-            console.log('Error signing up:', error);
+            console.log('Error signing up:', error.response.data);
             setError('Failed to sign up.Please try again.')
         }
     };

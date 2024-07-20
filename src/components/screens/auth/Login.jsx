@@ -20,19 +20,21 @@ function Login() {
 
     try {
       console.log('Login request:', {
-        email: email,
+        username: email,
         password: password,
       });
 
       const requestData = {
-        email: username,
+        username: email,
         password: password,
       };
       
+      console.log('Request data:', { username:email, password });
+
       const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData,{
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
       });
 
       console.log('User data:', response);
@@ -55,7 +57,7 @@ function Login() {
         window.location.replace('/');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error:', error.response.data);
       setError('Failed to login. Please check your credentials.');
     }
   };
@@ -98,8 +100,8 @@ function Login() {
                 type="text"
                 placeholder='Username'
                 className='w-full rounded-md py-4 pl-5 pr-20 border-none'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <input
