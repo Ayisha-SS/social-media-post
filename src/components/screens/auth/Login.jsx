@@ -6,7 +6,6 @@ import axios from 'axios';
 
 function Login() {
 
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -16,7 +15,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios.defaults.headers.post['Content-Type'] = 'application/json';
 
     try {
       console.log('Login request:', {
@@ -31,18 +29,13 @@ function Login() {
       
       console.log('Request data:', { username:email, password });
 
-      const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData,{
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
-      });
+      const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData);
 
       console.log('User data:', response);
 
       const { access, refresh } = response.data;
 
       localStorage.setItem('accessToken', access);
-      // localStorage.setItem('refreshToken', refresh);
 
       if (userTab) {
         localStorage.setItem('userRole', 'user');

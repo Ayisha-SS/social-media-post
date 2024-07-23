@@ -20,23 +20,20 @@ function SignUp() {
             console.log('Login request:', {
                 email: email,
                 password: password,
-                name: username
+                username: username
             });
 
             const response = await axios.post('http://localhost:8000/api/v1/auth/create/', {
                 email: email,
                 password: password,
-                name: username,
+                username: username,
                 is_active: true
             });
 
-            // console.log('activat',is_active);
-            // console.log("Signup successfully:", response.data);
-            // navigate('/login');
+            
 
             if (response.status === 201) {
                 console.log("Account created successfully");
-                // Redirect to login page
                 window.location.replace('/login');
               } else {
                 setError(response.data.error);

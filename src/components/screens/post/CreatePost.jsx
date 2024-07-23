@@ -23,8 +23,6 @@ function CreatePost() {
     formData.append("description",description);
     formData.append("image",image);
 
-    // const adminUser = JSON.parse(localStorage.getItem('adminUser'));
-    // formData.append("created_by", adminUser.id);
 
     const token = localStorage.getItem('accessToken');
     console.log('Retrieved token:', token);
@@ -85,7 +83,6 @@ function CreatePost() {
             </div>
             <div className='flex flex-col gap-3'>
               <label htmlFor="description" className='text-base font-medium'>Description</label>
-              {/* <input type="text" /> */}
               <textarea name="" 
                 id="description" 
                 className='rounded-lg h-60 px-2 focus:outline-none max-[540px]:h-40'
