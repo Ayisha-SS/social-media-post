@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
@@ -38,14 +37,6 @@ function MyPost() {
     fetchPosts();
   }, []);
 
-  const deletePost = async (postId) => {
-    try {
-      await axios.delete(`http://localhost:8000/api/v1/createpost/${postId}/`);
-      setPosts(posts.filter(post => post.id !== postId));
-    } catch (error) {
-      console.error('Error deleting post:', error);
-    }
-  };
 
   const handleLike = (postId) => {
     setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [postId]: !prevLikedPosts[postId] }));
@@ -99,7 +90,6 @@ function MyPost() {
                   })}
                 </h4>
               </span>
-              <button onClick={() => deletePost(post.id)} className='rounded-md bg-blue-700 py-3 px-6 text-base font-normal text-white mt-3'>Delete</button>
             </div>
           ))
         ) : (
