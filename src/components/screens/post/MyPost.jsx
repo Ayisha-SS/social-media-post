@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { FaHeart } from "react-icons/fa";
+import { Helmet } from "react-helmet";
+
 import { FaRegComment } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
 import Logo from '../../includes/navBar/Logo';
@@ -49,6 +51,9 @@ function MyPost() {
 
   return (
     <>
+    <Helmet>
+        <title>PostFun|MyPost</title>
+      </Helmet>
       <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
         <div className='wrapper flex justify-between'>
           <Logo />

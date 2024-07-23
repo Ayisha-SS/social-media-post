@@ -9,7 +9,7 @@ function Home() {
   return (
     <>
         <Helmet>
-            <title>Social Media</title>
+            <title>PostFun</title>
         </Helmet>
         <div>
           <NavBar/>

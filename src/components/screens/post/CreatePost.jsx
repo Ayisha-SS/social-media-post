@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { Helmet } from "react-helmet";
+
 import Logo from '../../includes/navBar/Logo'
 import axios from 'axios';
 
@@ -50,7 +52,11 @@ function CreatePost() {
 
 
   return (
+    
     <>
+    <Helmet>
+        <title>PostFun|Create</title>
+      </Helmet>
       <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
         <div className='wrapper'>
           <Logo/>

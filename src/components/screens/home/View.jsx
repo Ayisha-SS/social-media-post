@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { Helmet } from "react-helmet";
+
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
@@ -36,6 +38,9 @@ function View() {
 
   return (
     <>
+    <Helmet>
+        <title>PostFun|View</title>
+      </Helmet>
       <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
         <div className='wrapper'>
 
