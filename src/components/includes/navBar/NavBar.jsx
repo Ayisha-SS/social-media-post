@@ -6,7 +6,7 @@ import LinkButton from '../../general/LinkButton';
 
 function NavBar() {
 
-  let userRole = localStorage.getItem('userRole'); 
+  let role = localStorage.getItem('role'); 
 
   const handleLogout =() => {
     localStorage.removeItem('accessToken');
@@ -18,7 +18,7 @@ function NavBar() {
     <div className='wrapper flex justify-between'>  
         <Logo/>
         <div className='flex gap-2 max-[360px]:flex-col'>
-          { userRole === "admin" && (
+          { role === "admin" && (
 
             <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/>
           )}

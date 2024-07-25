@@ -9,7 +9,10 @@ function SignUp() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [role,setRole] = useState('');
     const [error, setError] = useState(null);
+    const [userTab, setUserTab] = useState(true)
+
 
     const navigate = useNavigate();
 
@@ -17,20 +20,20 @@ function SignUp() {
         e.preventDefault();
 
         try {
-            console.log('Login request:', {
+            console.log('signup request:', {
                 email: email,
                 password: password,
-                username: username
+                username: username,
+                role: userTab ? 'user' : 'admin',
             });
 
             const response = await axios.post('http://localhost:8000/api/v1/auth/create/', {
                 email: email,
                 password: password,
                 username: username,
+                role: userTab ? 'user' : 'admin',
                 is_active: true
             });
-
-            
 
             if (response.status === 201) {
                 console.log("Account created successfully");
@@ -45,6 +48,15 @@ function SignUp() {
         }
     };
 
+
+    const switchToUserTab = () => {
+        setUserTab(true);
+      };
+    
+      const switchToAdminTab = () => {
+        setUserTab(false);
+      };
+
     return (
         <>
             <Helmet>
@@ -53,6 +65,20 @@ function SignUp() {
             <div className='bg-gradient-to-r from-pink-500  to-purple-900  px-10 py-20 flex items-center justify-center min-h-screen'>
                 <div className='bg-gradient-to-r from-purple-900 to-pink-500 flex flex-col justify-center items-center py-10 px-20'>
                     <h1 className='text-[#fff] text-5xl font-extrabold mb-3'>SignUp</h1>
+                    <div className='flex gap-5 mb-5'>
+            <button
+              className={`py-2 px-4 rounded-md focus:outline-none ${userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
+              onClick={switchToUserTab}
+            >
+              User
+            </button>
+            <button
+              className={`py-2 px-4 rounded-md focus:outline-none ${!userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
+              onClick={switchToAdminTab}
+            >
+              Admin
+            </button>
+          </div>
                     <form action="" className='' onSubmit={handleSubmit}>
                         <div className='flex flex-col gap-2'>
                             <input

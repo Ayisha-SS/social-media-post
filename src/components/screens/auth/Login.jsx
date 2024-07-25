@@ -9,7 +9,6 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [userTab, setUserTab] = useState(true)
 
 
   const handleSubmit = async (e) => {
@@ -33,35 +32,27 @@ function Login() {
 
       console.log('User data:', response);
 
-      const { access, refresh } = response.data;
-
-      localStorage.setItem('accessToken', access);
-
-      if (userTab) {
-        localStorage.setItem('userRole', 'user');
+      if (response && response.data) {
+        const { access, refresh, role } = response.data;
+  
+        localStorage.setItem('accessToken', access);
+        localStorage.setItem('userRole', role);
+  
+        if (role === 'admin') {
+          window.location.replace('/'); 
+        } else {
+          window.location.replace('/'); 
+        }
       } else {
-        localStorage.setItem('userRole', 'admin');
-      }
-
-
-      if (userTab) {
-        window.location.replace('/');
-      } else {
-        window.location.replace('/');
+        setError('Failed to login. Please check your credentials.');
       }
     } catch (error) {
-      console.error('Login error:', error.response.data);
+      console.error('Login error:', error);
       setError('Failed to login. Please check your credentials.');
-    }
+    }    
   };
 
-  const switchToUserTab = () => {
-    setUserTab(true);
-  };
-
-  const switchToAdminTab = () => {
-    setUserTab(false);
-  };
+ 
 
   return (
     <>
@@ -71,22 +62,6 @@ function Login() {
       <div className='bg-gradient-to-r from-pink-500  to-purple-900  px-10 py-20 flex items-center justify-center min-h-screen'>
         <div className='bg-gradient-to-r from-purple-900 to-pink-500    flex flex-col justify-center items-center py-10 px-20'>
           <h1 className='text-[#fff] text-5xl font-extrabold mb-3'>Login</h1>
-
-          <div className='flex gap-5 mb-5'>
-            <button
-              className={`py-2 px-4 rounded-md focus:outline-none ${userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
-              onClick={switchToUserTab}
-            >
-              User
-            </button>
-            <button
-              className={`py-2 px-4 rounded-md focus:outline-none ${!userTab ? 'bg-white text-purple-900 font-semibold' : 'text-white'}`}
-              onClick={switchToAdminTab}
-            >
-              Admin
-            </button>
-          </div>
-
           <form action="" className='' onSubmit={handleSubmit}>
             <div className='flex flex-col gap-2'>
               <input
