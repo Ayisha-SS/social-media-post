@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -10,6 +11,9 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
+  
+  const navigate = useNavigate()
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,12 +23,12 @@ function Login() {
       console.log('Login request:', {
         username: email,
         password: password,
+        
       });
 
-      const requestData = {
-        username: email,
-        password: password,
-      };
+      const requestData = new URLSearchParams();
+      requestData.append('username', email);
+      requestData.append('password', password);
       
       console.log('Request data:', { username:email, password });
 
@@ -32,17 +36,26 @@ function Login() {
 
       console.log('User data:', response);
 
+
       if (response && response.data) {
-        const { access, refresh, role } = response.data;
-  
+        const { access, refresh,role } = response.data;
+ 
+
+        localStorage.setItem('refreshToken', refresh);
         localStorage.setItem('accessToken', access);
         localStorage.setItem('userRole', role);
-  
+
+        
+        console.log('login role',role)
+
         if (role === 'admin') {
-          window.location.replace('/'); 
+          navigate('/', { replace: true });
+        } else if (role === 'user') {
+          navigate('/user-dashboard', { replace: true });
         } else {
-          window.location.replace('/'); 
+          setError('Invalid user role');
         }
+        // navigate('/');
       } else {
         setError('Failed to login. Please check your credentials.');
       }
@@ -52,7 +65,6 @@ function Login() {
     }    
   };
 
- 
 
   return (
     <>

@@ -14,65 +14,36 @@ import ViewPost from './components/screens/post/ViewPost';
   function App() {
 
     const accessToken = localStorage.getItem('accessToken');
-    let role = localStorage.getItem('role'); 
+    let userRole = localStorage.getItem('userRole'); 
 
+    console.log('User Role:', userRole);
 
-    if (!role) {
-      role = ''; 
-    }
 
   return (
-   
-    <Router>
-    <Routes>
-      <Route path='/' element={accessToken? <Home /> : <Navigate to="/login" replace />} /> 
-      <Route path='/login' element={accessToken? <Navigate to="/" replace /> : <Login/>}/>
-      <Route path='/signup' element={<SignUp/>}/>
-      {role && role === 'admin' && (
-        <>
-          <Route path='/my-post' element={accessToken? <MyPost /> : <Navigate to="/login" replace />} />
-          <Route path='/create' element={accessToken? <CreatePost/> : <Navigate to="/login" replace />}/>
+  
+  <Router>
+  <Routes>
+    <Route path='/' element={accessToken? <Home /> : <Navigate to="/login" replace />} /> 
+    <Route path='/login' element={accessToken? <Navigate to="/" replace /> : <Login/>}/>
+    <Route path='/signup' element={<SignUp/>}/>
+    { userRole && userRole === 'admin' && (
+      <>
+        <Route path='/my-post' element={accessToken? <MyPost /> : <Navigate to="/login" replace />} />
+        <Route path='/create' element={accessToken? <CreatePost/> : <Navigate to="/login" replace />}/>
+        <Route path="/view/:id" element={<View />} />
 
+      </>
+      )}
+      {userRole && userRole === 'user' && (
+        <>
+          <Route path='/view/:id' element={accessToken? <View/> : <Navigate to="/login" replace />}/>
         </>
-        )}
-        {role === 'user' && (
-          <>
-            <Route path='/view/:id' element={accessToken? <View/> : <Navigate to="/login" replace />}/>
-          </>
-        )}
-    </Routes>
-  </Router>
+      )}
+  </Routes>
+</Router>
+ 
 );
 }
-
-// function App() {
-//   const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-//   const [role, setRole] = useState(localStorage.getItem('role'));
-
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={accessToken && role === 'user' ? <Home /> : <Navigate to="/login" replace />} />
-//         <Route path="/login" element={accessToken ? <Navigate to="/" replace /> : <Login />} />
-//         <Route path="/signup" element={<SignUp />} />
-//         {role === 'admin' && (
-//           <>
-//             <Route path="/my-post" element={<MyPost />} />
-//             <Route path="/create" element={<CreatePost />} />
-//             <Route path="/view/:id" element={<View />} />
-//             <Route path="/view-post/:id" element={<ViewPost />} />
-//           </>
-//         )}
-//         {role === 'user' && (
-//           <>
-//             <Route path="/view/:id" element={<View />} />
-//           </>
-//         )}
-//       </Routes>
-//     </Router>
-//   );
-// }
-
 
 
 export default App;
