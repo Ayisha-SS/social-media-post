@@ -44,13 +44,12 @@ function Login() {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('role', role);
 
-        if(role === 'admin'){
-          navigate('/',{ replace:true });
-        } else if (role === 'user'){
-          navigate('/',{ replace:true });
-        } else {
-          setError('Invalid user role');
-        }
+        // if (role === 'admin') {
+        //   navigate('/');
+        // } else {
+        //   navigate('/');
+        // }
+        navigate('/')
     } else {
       setError(response.data);
     }
