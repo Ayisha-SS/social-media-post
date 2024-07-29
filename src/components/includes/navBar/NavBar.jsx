@@ -6,7 +6,7 @@ import LinkButton from '../../general/LinkButton';
 
 function NavBar() {
 
-  let role = localStorage.getItem('userRole'); 
+  let role = localStorage.getItem('role'); 
 
   const handleLogout =() => {
     localStorage.removeItem('accessToken');

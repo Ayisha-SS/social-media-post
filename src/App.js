@@ -14,11 +14,10 @@ import ViewPost from './components/screens/post/ViewPost';
   function App() {
 
     const accessToken = localStorage.getItem('accessToken');
-    let userRole = localStorage.getItem('userRole'); 
+    let userRole = localStorage.getItem('role'); 
 
     console.log('User Role:', userRole);
-
-
+    console.log('token',accessToken)
   return (
   
   <Router>
@@ -26,7 +25,7 @@ import ViewPost from './components/screens/post/ViewPost';
     <Route path='/' element={accessToken? <Home /> : <Navigate to="/login" replace />} /> 
     <Route path='/login' element={accessToken? <Navigate to="/" replace /> : <Login/>}/>
     <Route path='/signup' element={<SignUp/>}/>
-    { userRole && userRole === 'admin' && (
+    { userRole === 'admin' && (
       <>
         <Route path='/my-post' element={accessToken? <MyPost /> : <Navigate to="/login" replace />} />
         <Route path='/create' element={accessToken? <CreatePost/> : <Navigate to="/login" replace />}/>
@@ -34,7 +33,7 @@ import ViewPost from './components/screens/post/ViewPost';
 
       </>
       )}
-      {userRole && userRole === 'user' && (
+      {userRole === 'user' && (
         <>
           <Route path='/view/:id' element={accessToken? <View/> : <Navigate to="/login" replace />}/>
         </>

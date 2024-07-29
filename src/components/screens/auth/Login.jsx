@@ -11,58 +11,53 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
-  
   const navigate = useNavigate()
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
     try {
       console.log('Login request:', {
         username: email,
         password: password,
         
       });
+      const requestData = {
+        username: email,
+        password: password,
+      };
+  
+      console.log('Request data:', requestData);
 
-      const requestData = new URLSearchParams();
-      requestData.append('username', email);
-      requestData.append('password', password);
-      
-      console.log('Request data:', { username:email, password });
-
-      const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData);
-
+      const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData,{
+        
+          headers: {
+            'Content-Type': 'application/json',
+          }
+      });
+      console.log('Response:', response);
       console.log('User data:', response);
 
+    if (response.status === 200) {
+      const accessToken = response.data.token;
+      const role = response.data.role;
 
-      if (response && response.data) {
-        const { access, refresh,role } = response.data;
- 
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('role', role);
 
-        localStorage.setItem('refreshToken', refresh);
-        localStorage.setItem('accessToken', access);
-        localStorage.setItem('userRole', role);
-
-        
-        console.log('login role',role)
-
-        if (role === 'admin') {
-          navigate('/', { replace: true });
-        } else if (role === 'user') {
-          navigate('/user-dashboard', { replace: true });
+        if(role === 'admin'){
+          navigate('/',{ replace:true });
+        } else if (role === 'user'){
+          navigate('/',{ replace:true });
         } else {
           setError('Invalid user role');
         }
-        // navigate('/');
-      } else {
-        setError('Failed to login. Please check your credentials.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Failed to login. Please check your credentials.');
-    }    
+    } else {
+      setError(response.data);
+    }
+  } catch (error) {
+    console.error(error);
+    setError('Failed to login');
+  }
   };
 
 
