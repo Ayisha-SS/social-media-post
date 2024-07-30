@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router,Routes, Route,Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/screens/auth/Login';
 import Home from './components/screens/home/Home';
 import SignUp from './components/screens/auth/SignUp';
@@ -11,15 +11,33 @@ import ViewPost from './components/screens/post/ViewPost';
 
 
 
-  function App() {
+function App() {
 
-    const accessToken = localStorage.getItem('accessToken');
-    let userRole = localStorage.getItem('role'); 
+  let role = localStorage.getItem('role');
 
-    console.log('User Role:', userRole);
-    console.log('token',accessToken)
   return (
-  
+
+    <Router>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/my-post' element={<MyPost />} />
+        <Route path='/create' element={<CreatePost />} />
+        <Route path="/view/:id" element={<View />} />
+        <Route path='/view/:id' element={<View />} />
+      </Routes>
+    </Router>
+
+  );
+}
+
+
+export default App;
+
+
+
+
 //   <Router>
 //   <Routes>
 //     <Route path='/' element={accessToken? <Home /> : <Navigate to="/login" replace />} /> 
@@ -40,26 +58,3 @@ import ViewPost from './components/screens/post/ViewPost';
 //       )}
 //   </Routes>
 // </Router>
-
-<Router>
-  <Routes>
-    <Route path='/' element={ <Home /> } /> 
-    <Route path='/login' element={ <Login/>}/>
-    <Route path='/signup' element={<SignUp/>}/>
-    
-        <Route path='/my-post' element={ <MyPost />} />
-        <Route path='/create' element={<CreatePost/> }/>
-        <Route path="/view/:id" element={<View />} />
-
-     
-          <Route path='/view/:id' element={ <View/>}/>
-      
-      
-  </Routes>
-</Router>
- 
-);
-}
-
-
-export default App;

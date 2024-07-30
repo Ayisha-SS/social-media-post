@@ -9,7 +9,7 @@ function SignUp() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('USER');
   const [error, setError] = useState(null);
   const [userTab, setUserTab] = useState(true)
 
@@ -26,10 +26,8 @@ function SignUp() {
         password: password,
         username: username,
         role:role
-        // role: userTab ? 'USER' : 'ADMIN',
       });
 
-      // const role = userTab ? 'USER' : 'ADMIN';
       const response = await axios.post('http://localhost:8000/api/v1/auth/create/', {
         email: email,
         password: password,
@@ -41,6 +39,7 @@ function SignUp() {
 
       if (response.status === 201) {
         console.log("Account created successfully");
+        localStorage.setItem('role',role)
         navigate('/login', { replace: true });
       } else if (response.status === 400) {
         console.error('Error signing up:', response.data);

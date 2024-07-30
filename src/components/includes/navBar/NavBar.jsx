@@ -20,12 +20,12 @@ function NavBar() {
         <div className='flex gap-2 max-[360px]:flex-col'>
           
 
-            <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/>
+            {/* <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/> */}
           
-          {/* { role === "admin" && (
+          { role === "admin" && (
 
             <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/>
-          )} */}
+          )}
             <LinkButton to="/" text="Logout" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900" onClick={handleLogout}/>
         </div>
     </div>

@@ -10,8 +10,9 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [role, setRole] = useState(null);
-
+  // const [role, setRole] = useState(null);
+  // const [role, setRole] = useState(localStorage.getItem('role') || null);
+  
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -25,7 +26,7 @@ function Login() {
       const requestData = {
         username: email,
         password: password,
-        role:role
+        // role:role
       };
 
       console.log('Request data:', requestData);
@@ -38,13 +39,14 @@ function Login() {
 
       if (response.status === 200) {
         const accessToken = response.data.access;
+        const role = response.data.role;
         console.log('accessToken:', accessToken); 
         localStorage.setItem('accessToken', accessToken);
-        const role = response.data.role;
         localStorage.setItem('role', role);
-        setRole(role);
+        // setRole(role);
 
-        console.log('role',role)
+        console.log('Login successful:', { accessToken, role });
+
         // navigate('/', { replace: true });
         alert('login successfully')
     } else {
