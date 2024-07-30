@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [role, setRole] = useState(null);
 
   const navigate = useNavigate()
 
@@ -18,38 +19,34 @@ function Login() {
     try {
       console.log('Login request:', {
         username: email,
-        password: password,
-        
+        password: password,  
       });
+
       const requestData = {
         username: email,
         password: password,
+        role:role
       };
-  
-      console.log('Request data:', requestData);
 
+      console.log('Request data:', requestData);
       const response = await axios.post('http://localhost:8000/api/v1/auth/token/',requestData,{
-        
           headers: {
             'Content-Type': 'application/json',
           }
       });
       console.log('Response:', response);
-      console.log('User data:', response);
 
-    if (response.status === 200) {
-      const accessToken = response.data.token;
-      const role = response.data.role;
-
+      if (response.status === 200) {
+        const accessToken = response.data.access;
+        console.log('accessToken:', accessToken); 
         localStorage.setItem('accessToken', accessToken);
+        const role = response.data.role;
         localStorage.setItem('role', role);
+        setRole(role);
 
-        // if (role === 'admin') {
-        //   navigate('/');
-        // } else {
-        //   navigate('/');
-        // }
-        navigate('/')
+        console.log('role',role)
+        // navigate('/', { replace: true });
+        alert('login successfully')
     } else {
       setError(response.data);
     }
@@ -86,7 +83,7 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button type="submit" className='w-full bg-gradient-to-r from-purple-900 to-pink-500 border border-slate-400 py-4 pl-5 pr-20 rounded-md mt-5 text-slate-400 font-medium text-xl'>Login</button>
+            <button type="submit" className='w-full bg-gradient-to-r from-purple-900 to-pink-500 border border-slate-400 py-4 pl-5 pr-20 rounded-md mt-5 text-slate-400 font-medium text-xl '>Login</button>
             {error && <p>{error}</p>}
           </form>
           <div>

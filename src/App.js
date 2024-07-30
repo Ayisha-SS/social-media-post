@@ -20,24 +20,41 @@ import ViewPost from './components/screens/post/ViewPost';
     console.log('token',accessToken)
   return (
   
-  <Router>
+//   <Router>
+//   <Routes>
+//     <Route path='/' element={accessToken? <Home /> : <Navigate to="/login" replace />} /> 
+//     <Route path='/login' element={accessToken? <Navigate to="/" replace /> : <Login/>}/>
+//     <Route path='/signup' element={<SignUp/>}/>
+//     { userRole === 'admin' && (
+//       <>
+//         <Route path='/my-post' element={accessToken? <MyPost /> : <Navigate to="/login" replace />} />
+//         <Route path='/create' element={accessToken? <CreatePost/> : <Navigate to="/login" replace />}/>
+//         <Route path="/view/:id" element={<View />} />
+
+//       </>
+//       )}
+//       {userRole === 'user' && (
+//         <>
+//           <Route path='/view/:id' element={accessToken? <View/> : <Navigate to="/login" replace />}/>
+//         </>
+//       )}
+//   </Routes>
+// </Router>
+
+<Router>
   <Routes>
-    <Route path='/' element={accessToken? <Home /> : <Navigate to="/login" replace />} /> 
-    <Route path='/login' element={accessToken? <Navigate to="/" replace /> : <Login/>}/>
+    <Route path='/' element={ <Home /> } /> 
+    <Route path='/login' element={ <Login/>}/>
     <Route path='/signup' element={<SignUp/>}/>
-    { userRole === 'admin' && (
-      <>
-        <Route path='/my-post' element={accessToken? <MyPost /> : <Navigate to="/login" replace />} />
-        <Route path='/create' element={accessToken? <CreatePost/> : <Navigate to="/login" replace />}/>
+    
+        <Route path='/my-post' element={ <MyPost />} />
+        <Route path='/create' element={<CreatePost/> }/>
         <Route path="/view/:id" element={<View />} />
 
-      </>
-      )}
-      {userRole === 'user' && (
-        <>
-          <Route path='/view/:id' element={accessToken? <View/> : <Navigate to="/login" replace />}/>
-        </>
-      )}
+     
+          <Route path='/view/:id' element={ <View/>}/>
+      
+      
   </Routes>
 </Router>
  
