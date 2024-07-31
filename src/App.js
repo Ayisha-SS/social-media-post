@@ -43,16 +43,3 @@ function App() {
 }
 
 export default App;
-
-
-//     <Router>
-//       <Routes>
-//         <Route path='/' element={<Home />} />
-//         <Route path='/login' element={<Login />} />
-//         <Route path='/signup' element={<SignUp />} />
-//         <Route path='/my-post' element={<MyPost />} />
-//         <Route path='/create' element={<CreatePost />} />
-//         <Route path="/view/:id" element={<View />} />
-//         <Route path='/view/:id' element={<View />} />
-//       </Routes>
-//     </Router>

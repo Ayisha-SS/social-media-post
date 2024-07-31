@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { FaRegCircleUser } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";

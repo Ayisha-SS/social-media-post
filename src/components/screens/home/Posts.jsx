@@ -36,7 +36,7 @@ function Posts() {
   }
 
   return (
-    <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center max-[768px]:gap-'>
+    <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center '>
       {posts.map(post => (
         <div className='flex flex-col py-2 w-full  items-start p-2 h-[500px] max-[768px]:h-[400px] '>
           <div className='flex items-center gap-5'>
