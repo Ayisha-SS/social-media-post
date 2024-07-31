@@ -1,12 +1,20 @@
-import React from 'react'
+import React, {useState, useEffect}from 'react'
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import LinkButton from '../../general/LinkButton';
-
+import Cookies from 'js-cookie'
 
 function NavBar() {
 
-  let role = localStorage.getItem('role'); 
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const role = Cookies.get('jobRole');
+    if(role){
+      setRole(role);
+    }
+  },[]);
+  console.log('role:',role);
 
   const handleLogout =() => {
     localStorage.removeItem('accessToken');
@@ -18,14 +26,11 @@ function NavBar() {
     <div className='wrapper flex justify-between'>  
         <Logo/>
         <div className='flex gap-2 max-[360px]:flex-col'>
-          
+         { role === "ADMIN" && (
 
+          <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/>
+      )}
             {/* <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/> */}
-          
-          { role === "admin" && (
-
-            <LinkButton to="/my-post" text="My Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900"/>
-          )}
             <LinkButton to="/" text="Logout" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900" onClick={handleLogout}/>
         </div>
     </div>
@@ -34,3 +39,5 @@ function NavBar() {
 }
 
 export default NavBar
+
+
