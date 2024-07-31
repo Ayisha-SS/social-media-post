@@ -8,6 +8,7 @@ import { SiSlideshare } from "react-icons/si";
 import Logo from '../../includes/navBar/Logo';
 import LinkButton from '../../general/LinkButton';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 
 function MyPost() {
@@ -15,7 +16,7 @@ function MyPost() {
   const [loading, setLoading] = useState(true);
   const [likedPost, setLikedPost] = useState({});
 
-  const token = localStorage.getItem('accessToken');
+  const token = Cookies.get('auth_token');
   const axiosInstance = axios.create({
     headers: {
       Authorization: `Bearer ${token}`,

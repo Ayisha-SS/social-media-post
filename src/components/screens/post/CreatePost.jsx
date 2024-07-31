@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 
 import Logo from '../../includes/navBar/Logo'
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function CreatePost() {
 
@@ -26,7 +27,7 @@ function CreatePost() {
     formData.append("image",image);
 
 
-    const token = localStorage.getItem('accessToken');
+    const token = Cookies.get('auth_token');
     console.log('Retrieved token:', token);
 
     try {
