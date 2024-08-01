@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { FaHeart } from "react-icons/fa";
 import { Helmet } from "react-helmet";
@@ -15,8 +14,11 @@ function MyPost() {
   const [loading, setLoading] = useState(true);
   const [likedPost, setLikedPost] = useState({});
 
+
   const token = Cookies.get('auth_token');
-  
+  const currentUserId = Cookies.get('user_id');
+  console.log('id:',currentUserId);
+
   const axiosInstance = axios.create({
     headers: {
       Authorization: `Bearer ${token}`,
@@ -28,7 +30,10 @@ function MyPost() {
       try {
         const response = await axiosInstance.get('http://localhost:8000/api/v1/createpost/');
         console.log('API Response:', response.data);
-        setPosts(response.data);
+
+        const userPosts = response.data.filter(post => post.created_by === String(currentUserId));
+        console.log('Filtered User Posts:', userPosts);
+        setPosts(userPosts);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching posts:', error);
@@ -36,24 +41,18 @@ function MyPost() {
         setLoading(false);
       }
     };
-
     fetchPosts();
-  }, []);
-
-
-
+  }, [currentUserId]);
   const handleLike = (postId) => {
     setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [postId]: !prevLikedPosts[postId] }));
   };
-
   if (loading) {
     return <div>Loading...</div>;
   }
   console.log('Posts:', posts);
-
   return (
     <>
-    <Helmet>
+      <Helmet>
         <title>PostFun|MyPost</title>
       </Helmet>
       <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
@@ -62,9 +61,9 @@ function MyPost() {
           <LinkButton to="/create" text="Create Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900" />
         </div>
       </div>
-
       <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center w-[50%]'>
-        {Array.isArray(posts) && posts.length > 0 ? (
+        {/* {Array.isArray(posts) && posts.length > 0 ? ( */}
+        {posts.length > 0 ? (
           posts.map(post => (
             <div key={post.id} className='flex flex-col py-2 w-full items-start  p-2'>
               <span className='text-xl font-bold mt-3'>{post.title}</span>
@@ -106,5 +105,4 @@ function MyPost() {
     </>
   );
 }
-
 export default MyPost;

@@ -9,11 +9,11 @@ import Cookies from 'js-cookie';
 function CreatePost() {
   const navigate = useNavigate();
 
-  const [title,setTitle] = useState('');
-  const [category,setCategory] = useState('');
-  const [description,setDescription] = useState('');
-  const [image,setImage] = useState(null);
-  const [error,setError] = useState(null);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
+  const [error, setError] = useState(null);
 
 
   const handleImage = (e) => {
@@ -23,23 +23,31 @@ function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("title",title);
-    formData.append("category",category);
-    formData.append("description",description);
-    formData.append("image",image);
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("description", description);
+    formData.append("image", image);
+
+    const username = Cookies.get('username');
+    formData.append("created_by", username);
+    console.log("created_by:",username);
 
 
     const token = Cookies.get('auth_token');
     console.log('Retrieved token:', token);
+    
+      // Log the FormData entries
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}: ${value}`);
+  }
 
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/createpost/',formData,{
-        headers:{
-          'Content-Type':'multipart/form-data',
-          'Authorization':`Bearer ${token}`
+      const response = await axios.post('http://localhost:8000/api/v1/createpost/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         },
       });
-
 
       console.log('Post created successfully:', response.data);
       setTitle('');
@@ -49,33 +57,33 @@ function CreatePost() {
       alert('post created successfully')
       navigate('/', { replace: true });
 
-    } catch(error) {
-      console.error('Error creating post:',error);
+    } catch (error) {
+      console.error('Error creating post:', error);
       setError('Failed to create post. Please try again.');
     }
-};
+  };
 
 
   return (
-    
+
     <>
-    <Helmet>
+      <Helmet>
         <title>PostFun|Create</title>
       </Helmet>
       <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
         <div className='wrapper'>
-          <Logo/>
+          <Logo />
         </div>
       </div>
 
       <div className='wrapper py-16 flex flex-col items-center justify-center  max-[540px]:justify-start'>
         <div className='border border-slate-500 bg-slate-300 p-5 w-[70%] max-[768px]:w-[85%] '>
-          <form action="" className='flex flex-col gap-5 max-[480px]:gap-3' 
+          <form action="" className='flex flex-col gap-5 max-[480px]:gap-3'
             onSubmit={handleSubmit}>
             <div className='flex flex-col gap-3'>
               <label htmlFor="title" className='text-base font-medium '>Title</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 className='rounded-lg h-10 px-2 focus:outline-none'
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -84,18 +92,18 @@ function CreatePost() {
             </div>
             <div className='flex flex-col gap-3'>
               <label htmlFor="title" className='text-base font-medium '>Category</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 className='rounded-lg h-10 px-2 focus:outline-none'
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                />
+              />
             </div>
             <div className='flex flex-col gap-3'>
               <label htmlFor="description" className='text-base font-medium'>Description</label>
-              <textarea name="" 
-                id="description" 
+              <textarea name=""
+                id="description"
                 className='rounded-lg h-60 px-2 focus:outline-none max-[540px]:h-40'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -104,11 +112,11 @@ function CreatePost() {
             </div>
             <div className='flex flex-col gap-3 '>
               <label htmlFor="imageUpload" className='text-base font-medium'>Upload an Image</label>
-              <input 
-                type="file" 
-                id="imageUpload" 
+              <input
+                type="file"
+                id="imageUpload"
                 className='rounded-lg h-10 px-2 flex items-center justify-center focus:outline-none'
-                onChange={handleImage} 
+                onChange={handleImage}
                 required
               />
             </div>
@@ -125,8 +133,8 @@ function CreatePost() {
           >
             Cancel</button>
           <button className='text-base text-slate-900 py-2 px-7 bg-blue-600 rounded-full'
-             onClick={handleSubmit}
-            >Create</button>
+            onClick={handleSubmit}
+          >Create</button>
         </div>
         {error && <div className="text-red-500 mt-2">{error}</div>}
       </div>

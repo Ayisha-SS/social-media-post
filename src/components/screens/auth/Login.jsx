@@ -39,9 +39,17 @@ function Login() {
           Cookies.set('user_details', JSON.stringify(res.data.data));
           Cookies.set('username', `${res.data.data.username}`);
           Cookies.set('jobRole', `${res.data.data.role}`);
+          Cookies.set('user_id',`${res.data.data.id}`);    
           Cookies.set('auth_token', token, { secure: true, sameSite: 'Strict' });
           console.log(token);
           console.log(res.data.data.role);
+          console.log(res.data.data.id);
+
+           // Check if the user is an admin and set the created_by field
+           if (res.data.data.role === 'admin') {
+            Cookies.set('created_by', res.data.data.username);
+            console.log('Created By:', res.data.data.username);
+          }
           window.location.href = '/';
         } catch (error) {
           console.log('user details error');
