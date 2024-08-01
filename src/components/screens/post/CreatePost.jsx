@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Helmet } from "react-helmet";
+import { useNavigate } from 'react-router-dom';
 
 import Logo from '../../includes/navBar/Logo'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function CreatePost() {
+  const navigate = useNavigate();
 
   const [title,setTitle] = useState('');
   const [category,setCategory] = useState('');
@@ -45,6 +47,8 @@ function CreatePost() {
       setCategory('');
       setImage(null);
       alert('post created successfully')
+      navigate('/', { replace: true });
+
     } catch(error) {
       console.error('Error creating post:',error);
       setError('Failed to create post. Please try again.');
@@ -130,4 +134,4 @@ function CreatePost() {
   )
 }
 
-export default CreatePost
+export default CreatePost;

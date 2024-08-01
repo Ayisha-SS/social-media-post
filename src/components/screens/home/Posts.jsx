@@ -10,12 +10,13 @@ import axios from 'axios';
 function Posts() {
 
   const [posts, setPosts] = useState([]);
+  const [newPosts, setNewPosts] = useState([]);
   const [error, setError] = useState(null);
   const [likedPost, setLikedPost] = useState({});
+  
 
 
   useEffect(() => {
-
     axios.get('http://localhost:8000/api/v1/posts/')
       .then(response => {
         setPosts(response.data.data);
@@ -24,6 +25,8 @@ function Posts() {
         console.error('Error fetching the posts:', error);
       });
   }, []);
+
+  
 
   const handleLike = (postId) => {
     setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [postId]: !prevLikedPosts[postId] }));
@@ -36,6 +39,7 @@ function Posts() {
   }
 
   return (
+    <>
     <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center '>
       {posts.map(post => (
         <div className='flex flex-col py-2 w-full  items-start p-2 h-[500px] max-[768px]:h-[400px] '>
@@ -65,6 +69,7 @@ function Posts() {
 
       ))}
     </div>
+    </>
   );
 }
 

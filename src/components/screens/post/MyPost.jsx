@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaHeart } from "react-icons/fa";
 import { Helmet } from "react-helmet";
-
 import { FaRegComment } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
 import Logo from '../../includes/navBar/Logo';
@@ -17,6 +16,7 @@ function MyPost() {
   const [likedPost, setLikedPost] = useState({});
 
   const token = Cookies.get('auth_token');
+  
   const axiosInstance = axios.create({
     headers: {
       Authorization: `Bearer ${token}`,
@@ -39,6 +39,7 @@ function MyPost() {
 
     fetchPosts();
   }, []);
+
 
 
   const handleLike = (postId) => {

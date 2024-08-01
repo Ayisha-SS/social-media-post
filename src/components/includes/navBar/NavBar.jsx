@@ -15,9 +15,11 @@ function NavBar() {
   },[]);
   console.log('role:',role);
 
-  const handleLogout =() => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+
+  const handleLogout = () => {
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    Cookies.remove('jobRole');
     window.location.replace('/login')
   }
   return (
