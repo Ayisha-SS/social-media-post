@@ -9,7 +9,7 @@ import { RiThreadsFill } from "react-icons/ri";
 
 function Footer() {
     return (
-        <div className='flex bg-gradient-to-r from-purple-600 to-pink-500 static'>
+        <div className='flex fixed bottom-0 left-0 w-full bg-gradient-to-r from-purple-600 to-pink-500 '>
             <div className='wrapper py-6 flex justify-between items-center'>
                 
                 {/* <FooterLogo /> */}

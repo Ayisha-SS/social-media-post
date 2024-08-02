@@ -83,7 +83,6 @@ import { FaHeart } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Footer from '../../footer/Footer';
 
 function Posts() {
   const [posts, setPosts] = useState([]);
