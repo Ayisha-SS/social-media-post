@@ -42,6 +42,9 @@ function ViewPost() {
       <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
         <Logo />
       </div>
+      <div className='bg-gradient-to-r from-purple-400 to-pink-200'>
+
+      
       <div className='wrapper py-16'>
         <div className='flex flex-col py-2 w-full items-start h-auto border border-slate-300 p-2'>
           <div className='flex items-center gap-5'>
@@ -70,6 +73,7 @@ function ViewPost() {
           </div>
           <span className='text-sm font-normal text-slate-500 mt-5'>{views.created_at}</span>
         </div>
+      </div>
       </div>
     </div>
   )

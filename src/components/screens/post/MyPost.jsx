@@ -7,6 +7,7 @@ import Logo from '../../includes/navBar/Logo';
 import LinkButton from '../../general/LinkButton';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Footer from '../../footer/Footer';
 
 
 function MyPost() {
@@ -14,10 +15,10 @@ function MyPost() {
   const [loading, setLoading] = useState(true);
   const [likedPost, setLikedPost] = useState({});
 
-
   const token = Cookies.get('auth_token');
-  const currentUserId = Cookies.get('user_id');
-  console.log('id:',currentUserId);
+
+  const currentUsername = Cookies.get('username');
+  console.log('Current Username:', currentUsername);
 
   const axiosInstance = axios.create({
     headers: {
@@ -25,24 +26,27 @@ function MyPost() {
     },
   });
 
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axiosInstance.get('http://localhost:8000/api/v1/createpost/');
         console.log('API Response:', response.data);
 
-        const userPosts = response.data.filter(post => post.created_by === String(currentUserId));
+        const userPosts = response.data.filter(post => post.created_by === currentUsername);
         console.log('Filtered User Posts:', userPosts);
         setPosts(userPosts);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching posts:', error);
         console.error('Error response:', error.response);
+      } finally {
         setLoading(false);
       }
     };
     fetchPosts();
-  }, [currentUserId]);
+  }, [currentUsername]);
+
+
   const handleLike = (postId) => {
     setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [postId]: !prevLikedPosts[postId] }));
   };
@@ -55,12 +59,13 @@ function MyPost() {
       <Helmet>
         <title>PostFun|MyPost</title>
       </Helmet>
-      <div className='py-4 border-b border-b-solid border-b-purple-500 shadow-md'>
+      <div className='py-4 border-b-4 border-b-solid border-b-purple-500 shadow-md bg-slate-200'>
         <div className='wrapper flex justify-between'>
           <Logo />
-          <LinkButton to="/create" text="Create Post" gradientFrom="purple-600" gradientTo="pink-500" textColor="slate-900" />
+          <LinkButton to="/create" text="Create Post" className="bg-gradient-to-r from-purple-600 to-pink-500" textColor="slate-900" />
         </div>
       </div>
+        <div className='bg-gradient-to-r from-purple-400 to-pink-200'>
       <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center w-[50%]'>
         {/* {Array.isArray(posts) && posts.length > 0 ? ( */}
         {posts.length > 0 ? (
@@ -101,7 +106,9 @@ function MyPost() {
         ) : (
           <div>No posts found.</div>
         )}
+        </div>
       </div>
+      <Footer/>
     </>
   );
 }
