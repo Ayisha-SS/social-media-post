@@ -44,36 +44,48 @@ function ViewPost() {
       </div>
       <div className='bg-gradient-to-r from-purple-400 to-pink-200'>
 
-      
-      <div className='wrapper py-16'>
-        <div className='flex flex-col py-2 w-full items-start h-auto border border-slate-300 p-2'>
-          <div className='flex items-center gap-5'>
-            <span>
-              <h3 className='text-2xl font-medium'>{views.created_by}</h3>
-              <span className='text-xl font-medium'>{views.title}</span>
-            </span>
+
+        <div className='wrapper py-16'>
+          <div className='flex flex-col py-2 w-full items-start h-auto border border-slate-300 p-2'>
+            <div className='flex items-center gap-5'>
+              <span>
+                <h3 className='text-2xl font-medium'>{views.created_by}</h3>
+                <span className='text-xl font-medium'>{views.title}</span>
+              </span>
+            </div>
+            <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
+              <img src={views.image} alt={views.id} className='w-full h-full object-cover' />
+            </div>
+            <div className='flex gap-3 mt-3'>
+              <span>
+                <FaHeart size={25}
+                  style={{ fill: likedPost[id] ? 'red' : 'gray' }}
+                  onClick={() => handleLike(id)} />
+              </span>
+              <span><FaRegComment size={25} /></span>
+              <span><SiSlideshare size={25} /></span>
+            </div>
+            <div className='flex flex-col gap-4 mt-5 w-full'>
+              <h5 className='text-base font-medium flex justify-end'><span className='text-slate-600 font-normal mr-1'>Category:</span>{views.category}</h5>
+              <span className='text-base font-normal w-full'>
+                {views.description}
+              </span>
+            </div>
+            <h4 className='text-base text-slate-500 mt-3 '>
+              {new Date(post.created_at).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+              })} ,
+              {new Date(post.created_at).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              })}
+            </h4>
+            <span className='text-sm font-normal text-slate-500 mt-5'>{views.created_at}</span>
           </div>
-          <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-            <img src={views.image} alt={views.id} className='w-full h-full object-cover' />
-          </div>
-          <div className='flex gap-3 mt-3'>
-            <span>
-              <FaHeart size={25}
-                style={{ fill: likedPost[id] ? 'red' : 'gray' }}
-                onClick={() => handleLike(id)} />
-            </span>
-            <span><FaRegComment size={25} /></span>
-            <span><SiSlideshare size={25} /></span>
-          </div>
-          <div className='flex flex-col gap-4 mt-5 w-full'>
-            <h5 className='text-base font-medium flex justify-end'><span className='text-slate-600 font-normal mr-1'>Category:</span>{views.category}</h5>
-            <span className='text-base font-normal w-full'>
-              {views.description}
-            </span>
-          </div>
-          <span className='text-sm font-normal text-slate-500 mt-5'>{views.created_at}</span>
         </div>
-      </div>
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import React from 'react'
-import FooterLogo from './FooterLogo';
-import FooterLinks from './FooterLinks';
+
 
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
@@ -10,7 +9,7 @@ import { RiThreadsFill } from "react-icons/ri";
 function Footer() {
     return (
         <div className='flex fixed bottom-0 left-0 w-full bg-gradient-to-r from-purple-600 to-pink-500 '>
-            <div className='wrapper py-6 flex justify-between items-center'>
+            <div className='wrapper py-6 flex justify-between items-center max-[540px]:flex-col max-[540px]:items-start max-[540px]:whitespace-nowrap'>
                 
                 {/* <FooterLogo /> */}
                 <div>
