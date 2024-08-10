@@ -9,84 +9,180 @@ import axios from 'axios';
 import Logo from '../../includes/navBar/Logo';
 import Footer from '../../footer/Footer';
 
-function View() {
+// function View() {
 
-  const [views, setViews] = useState(null);
+//   const [views, setViews] = useState(null);
+//   const { id } = useParams();
+//   const [likedPost, setLikedPost] = useState({});
+
+
+//   useEffect(() => {
+//     const fetchPost = async () => {
+//       try {
+//         const response = await axios.get(`http://localhost:8000/api/v1/posts/view/${id}/`);
+//         console.log('API Response:', response.data);
+//         setViews(response.data.data);
+//       } catch (error) {
+//         console.error('Error fetching the post:', error)
+//       }
+//     };
+//     fetchPost();
+//   }, [id]);
+
+//   const handleLike = (id) => {
+//     setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [id]: !prevLikedPosts[id] }));
+//   };
+
+
+//   if (!views) {
+//     return <div>Loading...</div>
+//   }
+
+//   return (
+//     <>
+//       <Helmet>
+//         <title>PostFun|View</title>
+//       </Helmet>
+//       <div className='py-4 border-b-4 bg-slate-200 border-b-solid border-b-purple-500 shadow-2xl'>
+//         <div className='wrapper'>
+
+//           <Logo />
+//         </div>
+//       </div>
+//       <div className='pb-10 bg-gradient-to-r from-purple-400 to-pink-200'>
+//         <div className='wrapper py-16 '>
+//           <div className='flex flex-col py-2 w-full items-start h-full border-4 border-white p-2'>
+//             <div className='flex items-center gap-5'>
+//               <span className=''><FaRegCircleUser size={50} /></span>
+//               <span>
+//                 <h3 className='text-2xl font-medium'>{views.created_by}</h3>
+//                 <h5 className='text-base font-normal'>{views.category}</h5>
+//               </span>
+//             </div>
+//             <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
+//               <img src={views.image} alt={views.id} className='w-full h-full object-cover' />
+//             </div>
+//             <div className='flex gap-3 mt-3 ml-4'>
+//               <span>
+//                 <FaHeart size={25}
+//                   style={{ fill: likedPost[id] ? 'red' : 'gray' }}
+//                   onClick={() => handleLike(id)} />
+//               </span>
+//               <span><FaRegComment size={25} /></span>
+//               <span><SiSlideshare size={25} /></span>
+//             </div>
+//             <div className='flex flex-col gap-4 mt-5 w-full'>
+//               <span className='text-xl font-medium'>{views.title}</span>
+//               <span className='text-base font-normal w-full text-justify max-[540px]:text-[14px] max-[360px]:text-[12px]'>
+//                 {views.description}
+//               </span>
+//             </div>
+//             <span className='text-sm font-normal text-slate-500 mt-5'>May 28,2024</span>
+
+//           </div>
+//         </div>
+//       </div>
+//       <Footer />
+//     </>
+//   )
+// }
+
+// export default View
+
+
+// import React, { useEffect, useState } from 'react';
+// import { Helmet } from 'react-helmet';
+// import { FaRegCircleUser, FaHeart, FaRegComment, SiSlideshare } from 'react-icons/fa';
+// import { useParams } from 'react-router-dom';
+// import axios from 'axios';
+// import Logo from '../../includes/navBar/Logo';
+// import Footer from '../../footer/Footer';
+
+function View() {
+  const [post, setPost] = useState(null);
   const { id } = useParams();
   const [likedPost, setLikedPost] = useState({});
-
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/v1/posts/view/${id}/`);
-        console.log('API Response:', response.data);
-        setViews(response.data.data);
+        const [postsResponse, createPostResponse] = await Promise.all([
+          axios.get(`http://localhost:8000/api/v1/posts/view/${id}/`),
+          axios.get(`http://localhost:8000/api/v1/createpost/view/${id}/`)
+        ]);
+
+        // Choose the appropriate response based on the API
+        const postDetails = postsResponse.data.data || createPostResponse.data.data;
+        setPost(postDetails);
       } catch (error) {
-        console.error('Error fetching the post:', error)
+        console.error('Error fetching the post:', error);
       }
     };
+
     fetchPost();
   }, [id]);
 
-  const handleLike = (id) => {
-    setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [id]: !prevLikedPosts[id] }));
+  const handleLike = (postId) => {
+    setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [postId]: !prevLikedPosts[postId] }));
   };
 
-
-  if (!views) {
-    return <div>Loading...</div>
+  if (!post) {
+    return <div>Loading...</div>;
   }
 
   return (
     <>
       <Helmet>
-        <title>PostFun|View</title>
+        <title>PostFun | View</title>
       </Helmet>
-      <div className='py-4 border-b-4 bg-slate-200 border-b-solid border-b-purple-500 shadow-2xl'>
-        <div className='wrapper'>
-
+      <div className="py-4 border-b-4 bg-slate-200 border-b-solid border-b-purple-500 shadow-2xl">
+        <div className="wrapper">
           <Logo />
         </div>
       </div>
-      <div className='pb-10 bg-gradient-to-r from-purple-400 to-pink-200'>
-        <div className='wrapper py-16 '>
-          <div className='flex flex-col py-2 w-full items-start h-full border-4 border-white p-2'>
-            <div className='flex items-center gap-5'>
-              <span className=''><FaRegCircleUser size={50} /></span>
+      <div className="pb-10 bg-gradient-to-r from-purple-400 to-pink-200">
+        <div className="wrapper py-16">
+          <div className="flex flex-col py-2 w-full items-start h-full border-4 border-white p-2">
+            <div className="flex items-center gap-5">
+              <span className="">
+                <FaRegCircleUser size={50} />
+              </span>
               <span>
-                <h3 className='text-2xl font-medium'>{views.created_by}</h3>
-                <h5 className='text-base font-normal'>{views.category}</h5>
+                <h3 className="text-2xl font-medium">{post.created_by}</h3>
+                <h5 className="text-base font-normal">{post.category}</h5>
               </span>
             </div>
-            <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-              <img src={views.image} alt={views.id} className='w-full h-full object-cover' />
+            <div className="mt-5 items-center w-full overflow-hidden rounded-lg">
+              <img src={post.image} alt={post.id} className="w-full h-full object-cover" />
             </div>
-            <div className='flex gap-3 mt-3 ml-4'>
+            <div className="flex gap-3 mt-3 ml-4">
               <span>
-                <FaHeart size={25}
+                <FaHeart
+                  size={25}
                   style={{ fill: likedPost[id] ? 'red' : 'gray' }}
-                  onClick={() => handleLike(id)} />
+                  onClick={() => handleLike(id)}
+                />
               </span>
-              <span><FaRegComment size={25} /></span>
-              <span><SiSlideshare size={25} /></span>
-            </div>
-            <div className='flex flex-col gap-4 mt-5 w-full'>
-              <span className='text-xl font-medium'>{views.title}</span>
-              <span className='text-base font-normal w-full text-justify max-[540px]:text-[14px] max-[360px]:text-[12px]'>
-                {views.description}
+              <span>
+                <FaRegComment size={25} />
+              </span>
+              <span>
+                <SiSlideshare size={25} />
               </span>
             </div>
-            <span className='text-sm font-normal text-slate-500 mt-5'>May 28,2024</span>
-
+            <div className="flex flex-col gap-4 mt-5 w-full">
+              <span className="text-xl font-medium">{post.title}</span>
+              <span className="text-base font-normal w-full text-justify max-[540px]:text-[14px] max-[360px]:text-[12px]">
+                {post.description}
+              </span>
+            </div>
+            <span className="text-sm font-normal text-slate-500 mt-5">May 28, 2024</span>
           </div>
         </div>
       </div>
       <Footer />
     </>
-  )
+  );
 }
 
-export default View
-
-
+export default View;
