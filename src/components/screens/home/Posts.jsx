@@ -12,6 +12,8 @@ function Posts() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [likedPost, setLikedPost] = useState({});
+  const [comment, setComment] = useState('');
+  const [showComment, setShowComment] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -39,9 +41,63 @@ function Posts() {
     fetchPosts();
   }, []);
 
-  const handleLike = (postId) => {
-    setLikedPost((prevLikedPosts) => ({ ...prevLikedPosts, [postId]: !prevLikedPosts[postId] }));
-  };
+
+
+// Function to handle like toggling
+const handleLike = (postId) => {
+  const currentLikedState = !likedPost[postId];
+  console.log('Liking post with ID:', postId);
+
+  // Update the state
+  setLikedPost((prevLikedPosts) => ({
+      ...prevLikedPosts,
+      [postId]: currentLikedState
+  }));
+
+  // Persist the state in localStorage
+  localStorage.setItem(`likedPost_${postId}`, JSON.stringify(currentLikedState));
+};
+
+// Load the liked states from localStorage on component mount
+useEffect(() => {
+  const storedLikes = {};
+  posts.forEach((post) => {
+      const liked = JSON.parse(localStorage.getItem(`likedPost_${post.id}`));
+      if (liked) {
+          storedLikes[post.id] = liked;
+      }
+  });
+  setLikedPost(storedLikes);
+}, [posts]);
+
+
+
+// comment
+
+const handleComment = async (postId,comment) => {
+  try {
+    const token = Cookies.get('auth_token');
+    const response = await axios.post('http://localhost:8000/api/v1/comments/',{
+      post:postId,
+      content:comment,
+    },{
+      headers: {
+        // 'Content-Type':'application/json',
+        Authorization:`Bearer ${token}`
+      }
+    });
+    if(response.status === 201){
+      console.log('Comment added:',response.data);
+      setComment('');  
+    } else {
+      console.error('Failed to add comment');
+    }
+  } catch(error) {
+    console.error('Error adding comment:',error);
+  }
+};
+
+
 
   if (error) {
     return <div>Error loading posts. Please try again later.</div>;
@@ -67,13 +123,37 @@ function Posts() {
             <div className='flex gap-3 mt-3 ml-4'>
               <span>
                 <FaHeart size={25}
-                  style={{ fill: likedPost[post.id] ? 'red' : 'gray' }}
+                  style={{ fill: likedPost[post.id] ? 'red' : 'gray',
+                           cursor:'pointer'
+                   }}
                   onClick={() => handleLike(post.id)} />
               </span>
-              <span><FaRegComment size={25} /></span>
+              {/* <span>
+                <FaRegComment size={25} />
+              </span> */}
+
+            <span onClick={() => {
+                console.log('Comment icon clicked:', post.id);  // Add this to debug
+                setShowComment(showComment === post.id ? null : post.id);
+            }}>
+              <FaRegComment size={25} />
+            </span>
               <span><SiSlideshare size={25} /></span>
             </div>
             <span className='text-xl font-normal'>{post.title}</span>
+
+            {showComment === post.id && (
+            <div className="comment-section">
+              <textarea
+                className="comment-input"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Add a comment..."
+              />
+              <button onClick={() => handleComment(post.id)}>Submit</button>
+            </div>
+          )}
+
           </div>
         ))}
       </div>
