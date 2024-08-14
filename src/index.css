@@ -13,6 +13,74 @@
     -webkit-text-fill-color: transparent;
   }
 
+
+  .comment-section {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .comment-section {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .comment-header span:first-child {
+    font-weight: bold;
+  }
+  
+  .comment-list {
+    padding: 16px;
+  }
+  
+  .comment-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .comment-avatar {
+    margin-right: 16px;
+  }
+  
+  .comment-content {
+    flex: 1;
+  }
+  
+  .comment-input-section {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .comment-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .comment-input::placeholder {
+    color: #aaa;
+  }
+  
+  .comment-input-section button {
+    margin-left: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
   @media (max-width: 480px) {
     .max-480 {
     @apply text-base
