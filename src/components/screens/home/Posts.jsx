@@ -16,8 +16,11 @@ function Posts() {
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState({});
   const [postComments, setPostComments] = useState({});
-  
+  const [commentCounts, setCommentCounts] = useState({});
+  const [loadingComments, setLoadingComments] = useState({});
 
+
+  
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -82,62 +85,6 @@ useEffect(() => {
 
 
 // comment..
-
-// // Function to get content type ID by model name
-// const getContentTypeId = (modelName) => {
-//   const contentTypeMap = {
-//     'createpost': 7, // ContentType ID for CreatePost
-//     'viewpost': 8,   // ContentType ID for ViewPost
-//   };
-//   return contentTypeMap[modelName?.toLowerCase()] || 8;
-// };
-
-// // Function to handle comment submission
-// const handleComment = async (postId, modelName) => {
-//   try {
-//     const token = Cookies.get('auth_token');
-//     const contentTypeId = getContentTypeId(modelName);
-
-//     if (!contentTypeId) {
-//       console.error('Invalid content type');
-//       return;
-//     }
-
-//     if (!comment || !postId) {
-//       console.error('Comment and post ID are required');
-//       return;
-//     }
-
-//     // Log the data before sending it
-//     console.log('Comment Data:', {
-//       content_type: contentTypeId,
-//       object_id: postId,
-//       content: comment,
-//     });
-
-//     const response = await axios.post('http://localhost:8000/api/v1/comments/', {
-//       content_type: contentTypeId,
-//       object_id: postId,
-//       content: comment,
-//     }, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         'Content-Type': 'application/json'
-//       }
-//     });
-
-//     if (response.status === 201) {
-//       console.log('Comment added:', response.data);
-//       setComment('');  
-//     } else {
-//       console.error('Failed to add comment');
-//     }
-//   } catch (error) {
-//     console.error('Error adding comment:', error.response ? error.response.data : error.message);
-//   }
-// };
-
-
 //  Function to get content type ID by model name
   const getContentTypeId = (modelName) => {
     const contentTypeMap = {
@@ -147,6 +94,7 @@ useEffect(() => {
     return contentTypeMap[modelName?.toLowerCase()] || 8;
   };
 
+  
   // Function to handle comment submission
   const handleComment = async (postId, modelName) => {
     try {
@@ -186,17 +134,28 @@ useEffect(() => {
         setComment('');
 
         // Fetch existing comments for the post
-        const commentsResponse = await axios.get(`http://localhost:8000/api/v1/comments/?object_id=${postId}`, {
+        const commentsResponse = await axios.get(`http://localhost:8000/api/v1/comments/${postId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
-        // Set the comments state for the post
+
         setPostComments((prevPostComments) => ({
           ...prevPostComments,
           [postId]: commentsResponse.data.data
         }));
+     // Update comment count by fetching the updated comment count
+    const updatedCommentCountResponse = await axios.get(`http://localhost:8000/api/v1/posts/${postId}/comment_count`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    setCommentCounts((prevCommentCounts) => ({
+      ...prevCommentCounts,
+      [postId]: updatedCommentCountResponse.data.comment_count
+    }));
       } else {
         console.error('Failed to add comment');
       }
@@ -250,40 +209,18 @@ useEffect(() => {
               <span><SiSlideshare size={25} /></span>
             </div>
             <span className='text-xl font-normal'>{post.title}</span>
-
-            {/* {showComment[post.id] && (
-              <div>
-                <input
-                  type="text"
-                  value={comment}
-                  onChange={(event) => setComment(event.target.value)}
-                  placeholder="Add a comment..."
-                />
-                <button onClick={() => handleCommentSubmit(post.id)}>Submit</button>
-              </div>
-            )} */}
-
-{/* {showComment === post.id && (
-    <div className="comment-section">
-      <textarea
-        className="comment-input"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        placeholder="Add a comment..."
-      />
-      <button onClick={() => handleComment(post.id)}>Submit</button>
-    </div>
-  )} */}
-
-
 {showComment === post.id && (
   <div className="comment-section">
+     {loadingComments[post.id] ? (
+        <div>Loading comments...</div>
+      ) : (
+        <div>
     <div className="comment-header">
       <span>Comments</span>
-      <span>{postComments[post.id] ? postComments[post.id].length : 0} comments</span>
+      <span>{commentCounts[post.id] || 0} comments</span>
     </div>
     <div className="comment-list">
-      {postComments[post.id] && postComments[post.id].map((comment) => (
+    {postComments[post.id]?.map((comment) => (
         <div key={comment.id} className="comment-item">
           <div className="comment-avatar">
             <FaRegCircleUser size={25} />
@@ -293,6 +230,7 @@ useEffect(() => {
           </div>
         </div>
       ))}
+      {!postComments[post.id] && <div>No comments yet</div>}
     </div>
     <div className="comment-input-section">
       <textarea
@@ -303,6 +241,8 @@ useEffect(() => {
       />
       <button onClick={() => handleComment(post.id)}>Post</button>
     </div>
+    </div>
+      )}
   </div>
 )}
 

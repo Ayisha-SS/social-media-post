@@ -222,3 +222,88 @@
 //     setError(error);
 //   });
 // };
+
+
+
+{/* {showComment === post.id && (
+    <div className="comment-section">
+      <textarea
+        className="comment-input"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder="Add a comment..."
+      />
+      <button onClick={() => handleComment(post.id)}>Submit</button>
+    </div>
+  )} */}
+
+
+
+
+      {/* {showComment[post.id] && (
+              <div>
+                <input
+                  type="text"
+                  value={comment}
+                  onChange={(event) => setComment(event.target.value)}
+                  placeholder="Add a comment..."
+                />
+                <button onClick={() => handleCommentSubmit(post.id)}>Submit</button>
+              </div>
+            )} */}
+
+
+
+// // Function to get content type ID by model name
+// const getContentTypeId = (modelName) => {
+//   const contentTypeMap = {
+//     'createpost': 7, // ContentType ID for CreatePost
+//     'viewpost': 8,   // ContentType ID for ViewPost
+//   };
+//   return contentTypeMap[modelName?.toLowerCase()] || 8;
+// };
+
+// // Function to handle comment submission
+// const handleComment = async (postId, modelName) => {
+//   try {
+//     const token = Cookies.get('auth_token');
+//     const contentTypeId = getContentTypeId(modelName);
+
+//     if (!contentTypeId) {
+//       console.error('Invalid content type');
+//       return;
+//     }
+
+//     if (!comment || !postId) {
+//       console.error('Comment and post ID are required');
+//       return;
+//     }
+
+//     // Log the data before sending it
+//     console.log('Comment Data:', {
+//       content_type: contentTypeId,
+//       object_id: postId,
+//       content: comment,
+//     });
+
+//     const response = await axios.post('http://localhost:8000/api/v1/comments/', {
+//       content_type: contentTypeId,
+//       object_id: postId,
+//       content: comment,
+//     }, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         'Content-Type': 'application/json'
+//       }
+//     });
+
+//     if (response.status === 201) {
+//       console.log('Comment added:', response.data);
+//       setComment('');  
+//     } else {
+//       console.error('Failed to add comment');
+//     }
+//   } catch (error) {
+//     console.error('Error adding comment:', error.response ? error.response.data : error.message);
+//   }
+// };
