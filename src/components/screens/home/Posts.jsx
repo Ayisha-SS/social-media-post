@@ -174,8 +174,7 @@ function Posts() {
             </span>
           </div>
           <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-            {/* <Link to={`/view/${post.id}`}> */}
-            <Link to={`${modelName}/view/${post.id}`}>
+            <Link to={`/view/${post.id}`}>
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>

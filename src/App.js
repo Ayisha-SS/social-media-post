@@ -34,8 +34,7 @@ function App() {
         {isAuthenticated && role === 'USER' && (
           <>          
           <Route path='/' element={<Home />} />
-          {/* <Route path="/view/:id" element={<View />} /> */}
-          <Route path="/:modelName/view/:id" component={<View/>} />
+          <Route path="/view/:id" element={<View />} />
           </>
 
         )}
@@ -44,8 +43,7 @@ function App() {
           <Route path='/' element={<Home />} />
             <Route path='/my-post' element={<MyPost />} />
             <Route path='/create' element={<CreatePost />} />
-            {/* <Route path="/view/:id" element={<View />} /> */}
-            <Route path="/:modelName/view/:id" component={<View/>} />
+            <Route path="/view/:id" element={<View />} />
           </>
         )}
         {isAuthenticated && (
