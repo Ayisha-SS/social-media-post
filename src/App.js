@@ -80,6 +80,7 @@ function App() {
         {isAuthenticated && role === 'USER' && (
           <>          <Route path='/' element={<Home />} />
           <Route path="/view/:id" element={<View />} />
+          {/* <Route path="/view/:modelName/:id" element={<View />} /> */}
           </>
 
         )}
