@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
@@ -9,7 +9,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-function Posts({ modelName }) {
+function Posts() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [likedPost, setLikedPost] = useState({});
@@ -18,6 +18,7 @@ function Posts({ modelName }) {
   const [postComments, setPostComments] = useState({});
   const [commentCounts, setCommentCounts] = useState({});
   const [loadingComments, setLoadingComments] = useState({});
+  const { modelName } = useParams()
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -36,12 +37,6 @@ function Posts({ modelName }) {
         const formattedCreatePostResponse = { data: createPostResponse.data };
         const allPosts = [...postsResponse.data.data, ...formattedCreatePostResponse.data];
         setPosts(allPosts);
-
-        // const formattedPosts = postsResponse.data.data.map(post => ({ ...post, source: 'posts' }));
-        // const formattedCreatePosts = createPostResponse.data.map(post => ({ ...post, source: 'createpost' }));
-
-        // const allPosts = [...formattedPosts, ...formattedCreatePosts];
-        // setPosts(allPosts);
 
       } catch (error) {
         console.error('Error fetching the posts:', error);
@@ -145,7 +140,7 @@ function Posts({ modelName }) {
 
       if (response.status === 201) {
         setComment('');
-        // Update the comments section immediately
+        
         setPostComments((prevPostComments) => ({
           ...prevPostComments,
           [postId]: [...(prevPostComments[postId] || []), response.data]
@@ -179,12 +174,8 @@ function Posts({ modelName }) {
             </span>
           </div>
           <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-            <Link to={`/view/${post.id}`}>
-            {/* <Link to={`/view/${modelName}/${post.id}`}> */}
-
-            {/* <Link to={post.source === 'createpost' ? `/createpost/view/${post.id}` : `/view/${post.id}`}> */}
-            {/* <Link to={`/view/${modelName}/${post.id}`}> */}
-
+            {/* <Link to={`/view/${post.id}`}> */}
+            <Link to={`${modelName}/view/${post.id}`}>
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>
