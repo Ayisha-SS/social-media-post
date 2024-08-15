@@ -37,6 +37,12 @@ function Posts({ modelName }) {
         const allPosts = [...postsResponse.data.data, ...formattedCreatePostResponse.data];
         setPosts(allPosts);
 
+        // const formattedPosts = postsResponse.data.data.map(post => ({ ...post, source: 'posts' }));
+        // const formattedCreatePosts = createPostResponse.data.map(post => ({ ...post, source: 'createpost' }));
+
+        // const allPosts = [...formattedPosts, ...formattedCreatePosts];
+        // setPosts(allPosts);
+
       } catch (error) {
         console.error('Error fetching the posts:', error);
         setError(error);
@@ -136,17 +142,6 @@ function Posts({ modelName }) {
           'Content-Type': 'application/json'
         }
       });
-  
-      // if (response.status === 201) {
-      //   setComment('');
-      //   const commentsResponse = await axios.get(`http://localhost:8000/api/v1/comments/${postId}`, {
-      //     headers: { Authorization: `Bearer ${token}` }
-      //   });
-  
-      //   setPostComments((prevPostComments) => ({
-      //     ...prevPostComments,
-      //     [postId]: commentsResponse.data.data
-      //   }));
 
       if (response.status === 201) {
         setComment('');
@@ -185,6 +180,11 @@ function Posts({ modelName }) {
           </div>
           <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
             <Link to={`/view/${post.id}`}>
+            {/* <Link to={`/view/${modelName}/${post.id}`}> */}
+
+            {/* <Link to={post.source === 'createpost' ? `/createpost/view/${post.id}` : `/view/${post.id}`}> */}
+            {/* <Link to={`/view/${modelName}/${post.id}`}> */}
+
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>
