@@ -13,6 +13,7 @@ import Footer from '../../footer/Footer';
 
 function View() {
   const {  id , modelName } = useParams();
+  // const {  id , modelName } = props;
 
   const [views, setViews] = useState(null);
   const [likedPost, setLikedPost] = useState({});
@@ -21,27 +22,50 @@ function View() {
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
 
-  // Fetch the post data based on the model name
-  useEffect(() => {
-    console.log('Model Name:', modelName);
-    console.log('Post ID:',  id );
+ 
+  // useEffect(() => {
+  //   console.log('Post ID:', id);
+  
+  //   const fetchPost = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:8000/api/v1/posts/view/${id}/`);
+  
+  //       setViews(response.data.data);
+  //     } catch (error) {
+  //       console.error('Error fetching the post:', error);
+  //     }
+  //   };
+  //   fetchPost();
+  // }, [id]);
 
+  // useEffect(() => {
+  //   const fetchPost = async () => {
+  //     try {
+  //       const url = modelName === 'createpost'
+  //         ? `http://localhost:8000/api/v1/createpost/view/${id}/`
+  //         : `http://localhost:8000/api/v1/posts/view/${id}/`;
+  
+  //       const response = await axios.get(url);
+  
+  //       setViews(response.data.data);
+  //     } catch (error) {
+  //       console.error('Error fetching the post:', error);
+  //     }
+  //   };
+  //   fetchPost();
+  // }, [id, modelName]);
+
+  useEffect(() => {
     const fetchPost = async () => {
       try {
-        const apiUrl = modelName === 'createpost'
-          ? `http://localhost:8000/api/v1/createpost/view/${ id }/`
-          : `http://localhost:8000/api/v1/posts/view/${ id }/`;
-
-          console.log("Fetching from URL:", apiUrl); // Log API URL
-
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(`http://localhost:8000/api/v1/${modelName}/view/${id}/`);
         setViews(response.data.data);
       } catch (error) {
         console.error('Error fetching the post:', error);
       }
     };
     fetchPost();
-  }, [ id , modelName]);
+  }, [id, modelName]);
 
   // Fetch comments for the post
   useEffect(() => {

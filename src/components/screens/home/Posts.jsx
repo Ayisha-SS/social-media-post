@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams , useNavigate} from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
@@ -19,13 +19,17 @@ function Posts() {
   const [commentCounts, setCommentCounts] = useState({});
   const [loadingComments, setLoadingComments] = useState({});
   const { modelName } = useParams()
+  // const [postsResponse, setPostsResponse] = useState({ data: { data: [] } });
+const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const token = Cookies.get('auth_token');
-
-        const [postsResponse, createPostResponse] = await Promise.all([
+  
+        // Fetching both posts and createPost responses simultaneously
+        const [postsData, createPostData] = await Promise.all([
           axios.get('http://localhost:8000/api/v1/posts/', {
             headers: { Authorization: `Bearer ${token}` }
           }),
@@ -33,19 +37,31 @@ function Posts() {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
-
-        const formattedCreatePostResponse = { data: createPostResponse.data };
-        const allPosts = [...postsResponse.data.data, ...formattedCreatePostResponse.data];
+  
+        // Format createPost response and merge with posts response
+        const formattedCreatePosts = createPostData.data.map(post => ({
+          ...post,
+          source: 'createpost'
+        }));
+  
+        const allPosts = [
+          ...postsData.data.data.map(post => ({ ...post, source: 'posts' })),
+          ...formattedCreatePosts
+        ];
+  
+        // Set the combined posts to the state
         setPosts(allPosts);
-
+  
       } catch (error) {
         console.error('Error fetching the posts:', error);
         setError(error);
       }
     };
-
+  
     fetchPosts();
   }, []);
+  
+  
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -88,6 +104,8 @@ function Posts() {
       fetchComments();
     }
   }, [posts]);
+
+
 
   const handleLike = (postId) => {
     const currentLikedState = !likedPost[postId];
@@ -174,7 +192,16 @@ function Posts() {
             </span>
           </div>
           <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-            <Link to={`/view/${post.id}`}>
+            {/* <Link to={`/view/${post.id}`}>
+              <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
+            </Link> */}
+            <Link
+              to={
+                post.source === 'posts'
+                  ? `/posts/view/${post.id}`
+                  : `/createpost/view/${post.id}`
+              }
+            >
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>

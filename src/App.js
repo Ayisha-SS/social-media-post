@@ -8,6 +8,7 @@ import MyPost from './components/screens/post/MyPost';
 import CreatePost from './components/screens/post/CreatePost';
 import View from './components/screens/home/View';
 import Cookies from 'js-cookie';
+import ViewPost from './components/screens/post/ViewPost';
 
 function App() {
   const [role, setRole] = useState(null);
@@ -34,7 +35,9 @@ function App() {
         {isAuthenticated && role === 'USER' && (
           <>          
           <Route path='/' element={<Home />} />
-          <Route path="/view/:id" element={<View />} />
+          {/* <Route path="/view/:id" element={<View />} /> */}
+         
+          <Route path="/:modelName/view/:id" element={<View />} />
           </>
 
         )}
@@ -43,7 +46,9 @@ function App() {
           <Route path='/' element={<Home />} />
             <Route path='/my-post' element={<MyPost />} />
             <Route path='/create' element={<CreatePost />} />
-            <Route path="/view/:id" element={<View />} />
+            {/* <Route path="/view/:id" element={<View />} /> */}
+            
+            <Route path="/:modelName/view/:id" element={<View />} />
           </>
         )}
         {isAuthenticated && (
