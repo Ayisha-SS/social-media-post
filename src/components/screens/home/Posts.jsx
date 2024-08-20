@@ -20,7 +20,7 @@ function Posts() {
   const [loadingComments, setLoadingComments] = useState({});
   const { modelName } = useParams()
 
-  const { likedPosts, handleLike} = useContext(LikedPostsContext)
+  const { likedPosts, handleLike } = useContext(LikedPostsContext)
 
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function Posts() {
       try {
         const token = Cookies.get('auth_token');
   
-        // Fetching both posts and createPost responses simultaneously
+        // Fetching api
         const [postsData, createPostData] = await Promise.all([
           axios.get('http://localhost:8000/api/v1/posts/', {
             headers: { Authorization: `Bearer ${token}` }
@@ -38,7 +38,7 @@ function Posts() {
           })
         ]);
   
-        // Format createPost response and merge with posts response
+        
         const formattedCreatePosts = createPostData.data.map(post => ({
           ...post,
           source: 'createpost'
@@ -49,7 +49,6 @@ function Posts() {
           ...formattedCreatePosts
         ];
   
-        // Set the combined posts to the state
         setPosts(allPosts);
   
       } catch (error) {
@@ -61,8 +60,7 @@ function Posts() {
     fetchPosts();
   }, []);
   
-  
-
+  // comments
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -181,11 +179,8 @@ function Posts() {
                   ? `/posts/view/${post.id}`
                   : `/createpost/view/${post.id}`
               }
-              state={{ modelName: post.source === "posts" ? "posts" : "createpost"}}
-              
+              state={{ modelName: post.source === "posts" ? "posts" : "createpost"}}   
             >
-            {/* <Link to={`/view/${post.id}`} state={{ modelName: post.source === 'posts' ? 'posts' : 'createpost' }}> */}
-
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>

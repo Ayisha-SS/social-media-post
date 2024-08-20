@@ -13,49 +13,17 @@ import { LikedPostsContext } from '../../context/Context';
 
 
 function View() {
-  const {  id, modelName  } = useParams();
-
+  
   const [views, setViews] = useState(null);
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(false);
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
-
+  
+  const {  id, modelName} = useParams();
   const { likedPosts, handleLike} = useContext(LikedPostsContext)
 
  
-  // useEffect(() => {
-  //   console.log('Post ID:', id);
-  
-  //   const fetchPost = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:8000/api/v1/posts/view/${id}/`);
-  
-  //       setViews(response.data.data);
-  //     } catch (error) {
-  //       console.error('Error fetching the post:', error);
-  //     }
-  //   };
-  //   fetchPost();
-  // }, [id]);
-
-  // useEffect(() => {
-  //   const fetchPost = async () => {
-  //     try {
-  //       const url = modelName === 'createpost'
-  //         ? `http://localhost:8000/api/v1/createpost/view/${id}/`
-  //         : `http://localhost:8000/api/v1/posts/view/${id}/`;
-  
-  //       const response = await axios.get(url);
-  
-  //       setViews(response.data.data);
-  //     } catch (error) {
-  //       console.error('Error fetching the post:', error);
-  //     }
-  //   };
-  //   fetchPost();
-  // }, [id, modelName]);
-
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -88,7 +56,6 @@ function View() {
 
 
 
-  // Get content type ID based on model name
   const getContentTypeId = (modelName) => {
     const contentTypeMap = {
       'createpost': 7,
