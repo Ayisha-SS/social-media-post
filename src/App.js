@@ -8,7 +8,8 @@ import MyPost from './components/screens/post/MyPost';
 import CreatePost from './components/screens/post/CreatePost';
 import View from './components/screens/home/View';
 import Cookies from 'js-cookie';
-import ViewPost from './components/screens/post/ViewPost';
+import { LikedPostsProvider } from './components/context/Context';
+
 
 function App() {
   const [role, setRole] = useState(null);
@@ -27,6 +28,7 @@ function App() {
   console.log('isAuthenticated:', isAuthenticated);
 
   return (
+    <LikedPostsProvider>
     <Router>
       <Routes>
         {/* <Route path='/' element={<Home />} /> */}
@@ -57,6 +59,7 @@ function App() {
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
+    </LikedPostsProvider>
   );
 }
 

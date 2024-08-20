@@ -1,26 +1,27 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Logo from '../../includes/navBar/Logo';
 import Footer from '../../footer/Footer';
+import { LikedPostsContext } from '../../context/Context';
 
 
 function View() {
-  const {  id , modelName } = useParams();
-  // const {  id , modelName } = props;
+  const {  id, modelName  } = useParams();
 
   const [views, setViews] = useState(null);
-  const [likedPost, setLikedPost] = useState({});
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(false);
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
+
+  const { likedPosts, handleLike} = useContext(LikedPostsContext)
 
  
   // useEffect(() => {
@@ -85,13 +86,7 @@ function View() {
     fetchComments();
   }, [ id ]);
 
-  // Handle the like functionality
-  const handleLike = (id) => {
-    setLikedPost((prevLikedPosts) => ({
-      ...prevLikedPosts,
-      [id]: !prevLikedPosts[id],
-    }));
-  };
+
 
   // Get content type ID based on model name
   const getContentTypeId = (modelName) => {
@@ -173,19 +168,21 @@ function View() {
               <span>
                 <FaHeart
                   size={25}
-                  style={{ fill: likedPost[ id ] ? 'red' : 'gray' }}
+                  style={{ fill: likedPosts[id] || views.is_liked ? 'red' : 'gray' }}
                   onClick={() => handleLike( id )}
+                  title='like'
                 />
               </span>
               <span 
                 onClick={() => setShowComment(!showComment)}
                 className='cursor-pointer'
+                title='Comment'
                 >
                 <FaRegComment size={25} />
               </span>
               
               
-              <span className='cursor-pointer'>
+              <span className='cursor-pointer' title='Share'>
                 <SiSlideshare size={25} />
               </span>
             </div>
@@ -198,7 +195,7 @@ function View() {
                 {views.description}
               </span>
             </div>
-            <span className="text-sm font-normal text-slate-500 mt-5">May 28, 2024</span>
+            <span className="text-sm font-normal text-slate-500 mt-5">{views.created_at}</span>
             
             {showComment && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">

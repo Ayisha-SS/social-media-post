@@ -1,26 +1,26 @@
 
-import React, { useEffect, useState } from 'react';
-import { Link, useParams , useNavigate} from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { SiSlideshare } from "react-icons/si";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { LikedPostsContext } from '../../context/Context';
 
 
 function Posts() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
-  const [likedPost, setLikedPost] = useState({});
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(null);
   const [postComments, setPostComments] = useState({});
   const [commentCounts, setCommentCounts] = useState({});
   const [loadingComments, setLoadingComments] = useState({});
   const { modelName } = useParams()
-  // const [postsResponse, setPostsResponse] = useState({ data: { data: [] } });
-const navigate = useNavigate();
+
+  const { likedPosts, handleLike} = useContext(LikedPostsContext)
 
 
   useEffect(() => {
@@ -107,26 +107,6 @@ const navigate = useNavigate();
 
 
 
-  const handleLike = (postId) => {
-    const currentLikedState = !likedPost[postId];
-    setLikedPost((prevLikedPosts) => ({
-      ...prevLikedPosts,
-      [postId]: currentLikedState
-    }));
-    localStorage.setItem(`likedPost_${postId}`, JSON.stringify(currentLikedState));
-  };
-
-  useEffect(() => {
-    const storedLikes = {};
-    posts.forEach((post) => {
-      const liked = JSON.parse(localStorage.getItem(`likedPost_${post.id}`));
-      if (liked) {
-        storedLikes[post.id] = liked;
-      }
-    });
-    setLikedPost(storedLikes);
-  }, [posts]);
-
   const getContentTypeId = (modelName) => {
     const contentTypeMap = {
       'createpost': 7,
@@ -201,7 +181,11 @@ const navigate = useNavigate();
                   ? `/posts/view/${post.id}`
                   : `/createpost/view/${post.id}`
               }
+              state={{ modelName: post.source === "posts" ? "posts" : "createpost"}}
+              
             >
+            {/* <Link to={`/view/${post.id}`} state={{ modelName: post.source === 'posts' ? 'posts' : 'createpost' }}> */}
+
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>
@@ -209,19 +193,21 @@ const navigate = useNavigate();
             <span>
               <FaHeart size={25}
                 style={{
-                  fill: likedPost[post.id] ? 'red' : 'gray',
+                  fill: likedPosts[post.id] ? 'red' : 'gray',
                   cursor: 'pointer'
                 }}
-                onClick={() => handleLike(post.id)} />
+                onClick={() => handleLike(post.id)}
+                title='Like' />
             </span>
 
             <span 
               onClick={() => setShowComment(showComment === post.id ? null : post.id)}
               className='cursor-pointer'
+              title='Comment'
             >
               <FaRegComment size={25} />
             </span>
-            <span className='cursor-pointer'><SiSlideshare size={25} /></span>
+            <span className='cursor-pointer' title='Share'><SiSlideshare size={25} /></span>
           </div>
           <span className="text-sm font-normal text-slate-800 mt-2">
             {commentCounts[post.id] || 0} comments

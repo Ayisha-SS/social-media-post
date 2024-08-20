@@ -22,10 +22,10 @@ function Footer() {
                 </div>
                 <div>
                     <ul className='flex gap-3 text-sm text-white'>
-                        <li className='hover:text-base hover:-translate-y-1'><a href="#"><FaFacebookSquare /></a></li>
-                        <li className='hover:text-base hover:-translate-y-1'><a href="#"><FaWhatsapp /></a></li>
-                        <li className='hover:text-base hover:-translate-y-1'><a href="#"><BsTwitterX /></a></li>
-                        <li className='hover:text-base hover:-translate-y-1'><a href="#"><RiThreadsFill /></a></li>
+                        <li className='hover:text-base hover:-translate-y-1'><a href="https://www.facebook.com/" target="_blank"><FaFacebookSquare /></a></li>
+                        <li className='hover:text-base hover:-translate-y-1'><a href="https://wa.me/" target="_blank"><FaWhatsapp /></a></li>
+                        <li className='hover:text-base hover:-translate-y-1'><a href="https://twitter.com/" target="_blank"><BsTwitterX /></a></li>
+                        <li className='hover:text-base hover:-translate-y-1'><a href="https://www.instagram.com/" target="_blank"><RiThreadsFill /></a></li>
                     </ul>
                 </div>
             </div>
