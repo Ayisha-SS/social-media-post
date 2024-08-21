@@ -2,10 +2,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
-import { FaRegComment } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
+import { FaRegComment } from "react-icons/fa6";
+import { PiHeartStraightDuotone } from "react-icons/pi";
 import { SiSlideshare } from "react-icons/si";
-import axios from 'axios';
+import { LuSendHorizonal } from "react-icons/lu";import axios from 'axios';
 import Cookies from 'js-cookie';
 import { LikedPostsContext } from '../../context/Context';
 
@@ -20,8 +20,9 @@ function Posts() {
   const [loadingComments, setLoadingComments] = useState({});
   const { modelName } = useParams()
 
-  const { likedPosts, handleLike } = useContext(LikedPostsContext)
-
+  const { likedPosts, handleLike, } = useContext(LikedPostsContext)
+  
+  const likeCount = likedPosts[posts.id] || 0;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -159,13 +160,13 @@ function Posts() {
   }
 
   return (
-    <div className='wrapper py-16 grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center menu-open'>
+    <div className='wrapper py-16  grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center menu-open'>
       {posts.map(post => (
-        <div key={post.id} className='flex flex-col py-2 w-full items-start p-2 h-[500px] max-[768px]:h-[400px]'>
+        <div key={post.id} className='flex flex-col py-2 w-full items-start border-b-2 pt-2 pb-4 h-[500px] max-[768px]:h-[400px]'>
           <div className='flex items-center gap-5'>
-            <span><FaRegCircleUser size={40} /></span>
+            <span className='cursor-pointer'><FaRegCircleUser size={40} /></span>
             <span>
-              <h3 className='text-2xl font-medium max-[768px]:text-[20px] max-[640px]:text-[22px]'>{post.created_by}</h3>
+              <h3 className='text-2xl font-medium max-[768px]:text-[20px] max-[640px]:text-[22px] cursor-pointer'>{post.created_by}</h3>
               <h5 className='text-base font-normal'>{post.category}</h5>
             </span>
           </div>
@@ -184,30 +185,41 @@ function Posts() {
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
           </div>
-          <div className='flex gap-3 mt-3 ml-4'>
-            <span>
-              <FaHeart size={25}
-                style={{
-                  fill: likedPosts[post.id] ? 'red' : 'gray',
-                  cursor: 'pointer'
-                }}
-                onClick={() => handleLike(post.id)}
-                title='Like' />
-            </span>
+          <div className='flex gap-3 mt-3 ml-'>
+      
+<span className='hover:text-slate-400'>
+      <PiHeartStraightDuotone
+        size={25}
+        style={{ fill: likedPosts[post.id] === 1 ? 'red' : 'black' ,
+          cursor: 'pointer',
+        }}
+        onClick={() => handleLike(post.id)}
+        title='like'
+      />
+      
+    </span>
 
             <span 
               onClick={() => setShowComment(showComment === post.id ? null : post.id)}
-              className='cursor-pointer'
+              className='cursor-pointer hover:text-slate-600'
               title='Comment'
             >
               <FaRegComment size={25} />
             </span>
-            <span className='cursor-pointer' title='Share'><SiSlideshare size={25} /></span>
+            <span className='cursor-pointer hover:text-slate-600' title='Share'><LuSendHorizonal size={25} /></span>
           </div>
-          <span className="text-sm font-normal text-slate-800 mt-2">
-            {commentCounts[post.id] || 0} comments
+          <span className="text-sm font-normal text-slate-800 mt-2 mb-1">
+            <h6 className=''>{likedPosts[post.id] || 0} Likes</h6>
+            {/* <h6>{commentCounts[post.id] || 0} comments</h6> */}
           </span>
-          <span className='text-xl font-normal'>{post.title}</span>
+          <span className='flex items-center'>
+            <h6 className='text-[16px] font-bold cursor-pointer'>{post.created_by}</h6>
+            <span className='text-[20px] font-normal ml-2'>{post.title}</span>
+          </span>
+          <span className="text-sm font-normal text-slate-800 mt-1">
+            {/* <h6 className=''>{likedPosts[post.id] || 0} Likes</h6> */}
+            <h6>{commentCounts[post.id] || 0} comments</h6>
+          </span>
 
           {showComment === post.id && (
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">

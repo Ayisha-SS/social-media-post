@@ -83,3 +83,27 @@
   
   //   fetchPosts();
   // }, []);
+
+
+
+        {/* <span>
+              <FaHeart size={25}
+                style={{
+                  fill: likedPosts[post.id] ? 'red' : 'gray',
+                  cursor: 'pointer'
+                }}
+                onClick={() => handleLike(post.id)}
+                title='Like' />
+                <h6>{likeCount}</h6>
+            </span> */}
+
+
+                {/* <span className='flex'>
+                <FaHeart
+                  size={25}
+                  style={{ fill: likedPosts[id] || views.is_liked ? 'red' : 'gray' }}
+                  onClick={() => handleLike( id )}
+                  title='like'
+                />
+                <h6>{likeCount}</h6>
+              </span> */}

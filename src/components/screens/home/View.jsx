@@ -3,7 +3,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaHeart, FaRegComment } from "react-icons/fa";
+import { PiHeartStraightDuotone } from "react-icons/pi";
 import { SiSlideshare } from "react-icons/si";
+import { LuSendHorizonal } from "react-icons/lu";
+
 import { useParams} from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -19,11 +22,13 @@ function View() {
   const [showComment, setShowComment] = useState(false);
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
+  // const [likeCount, setLikeCount] = useState(initialLikeCount);
   
   const {  id, modelName} = useParams();
-  const { likedPosts, handleLike} = useContext(LikedPostsContext)
+  const { likedPosts, isLiked,  handleLike} = useContext(LikedPostsContext)
+  
+  const likeCount = likedPosts[id] || 0;
 
- 
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -118,47 +123,61 @@ function View() {
       </div>
       <div className="pb-10 bg-gradient-to-r from-purple-400 to-pink-200">
         <div className="wrapper py-16">
-          <div className="flex flex-col py-2 w-full items-start h-full border-4 border-white p-2">
+          <div className="flex flex-col py-2 w-full items-start h-full border-y-2 p-2">
             <div className="flex items-center gap-5">
-              <span>
+              <span className='cursor-pointer'>
                 <FaRegCircleUser size={50} />
               </span>
               <span>
-                <h3 className="text-2xl font-medium">{views.created_by}</h3>
+                <h3 className="text-2xl font-medium cursor-pointer">{views.created_by}</h3>
                 <h5 className="text-base font-normal">{views.category}</h5>
               </span>
             </div>
             <div className="mt-5 items-center w-full overflow-hidden rounded-lg">
               <img src={views.image} alt={views.id} className="w-full h-full object-cover" />
             </div>
-            <div className="flex gap-3 mt-3 ml-4">
-              <span>
-                <FaHeart
-                  size={25}
-                  style={{ fill: likedPosts[id] || views.is_liked ? 'red' : 'gray' }}
-                  onClick={() => handleLike( id )}
-                  title='like'
-                />
-              </span>
+            <div className="flex gap-3 mt-3 ml-">
+          
+
+<span className='hover:text-slate-400'>
+      <PiHeartStraightDuotone
+        size={25}
+        style={{ fill: likedPosts[id] === 1  ? 'red' : 'black' ,
+          cursor: 'pointer',
+        }}
+        onClick={() => handleLike(id)}
+        title='like'
+      />
+      
+    </span>
+              
               <span 
                 onClick={() => setShowComment(!showComment)}
-                className='cursor-pointer'
+                className='cursor-pointer hover:text-slate-600'
                 title='Comment'
                 >
                 <FaRegComment size={25} />
               </span>
               
               
-              <span className='cursor-pointer' title='Share'>
-                <SiSlideshare size={25} />
+              <span className='cursor-pointer hover:text-slate-600' title='Share'>
+              <LuSendHorizonal size={25} />
               </span>
             </div>
             <span className="text-sm font-normal text-slate-800 mt-2">
-               {commentCounts} comments
+            <h6 className=''>{likedPosts[id] || 0} Likes</h6>
+            {/* <h6> {commentCounts} comments </h6> */}
             </span>
-            <div className="flex flex-col gap-4 mt-5 w-full">
-              <span className="text-xl font-medium">{views.title}</span>
-              <span className="text-base font-normal w-full text-justify">
+            <div className="flex flex-col gap- my-2 w-full">
+              <span className='flex items-center mb-2'>
+                <h6 className='text-[14px] font-bold cursor-pointer'>{views.created_by}</h6>
+                <span className="text-[18px] font-normal ml-2 ">{views.title}</span>
+              </span>
+              <span className="text-sm font-normal text-slate-800 mt-">
+            {/* <h6 className=''>{likedPosts[id] || 0} Likes</h6> */}
+            <h6> {commentCounts} comments </h6>
+            </span>
+              <span className="text-base font-normal w-full text-justify mt-4">
                 {views.description}
               </span>
             </div>
