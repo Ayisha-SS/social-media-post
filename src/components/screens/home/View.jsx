@@ -21,7 +21,7 @@ function View() {
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
 
-  const { id, modelName } = useParams();
+  const { id, modelName, contentType,  } = useParams();
   
   const { likedPosts, handleLike } = useContext(LikedPostsContext)
 
@@ -38,6 +38,8 @@ function View() {
     };
     fetchPost();
   }, [id, modelName]);
+
+
 
   // Fetch comments for the post
   useEffect(() => {
@@ -114,14 +116,14 @@ function View() {
       <Helmet>
         <title>PostFun | View</title>
       </Helmet>
-      <div className="py-4 border-b-4 bg-slate-200 border-b-solid border-b-purple-500 shadow-2xl">
+      <div className="py-4  fixed top-0 left-0 right-0 border-b-4 bg-slate-200 border-b-solid border-b-purple-500 shadow-2xl">
         <div className="wrapper">
           <Logo />
         </div>
       </div>
       <div className="pb-10 bg-gradient-to-r from-purple-400 to-pink-200 ">
-        <div className="wrapper py-16">
-          <div className="flex flex-col py-2 items-start justify-center h-full border-y-2 p-2 w-[100%] px-7">
+        <div className="wrapper pb-16 pt-[100px] flex items-center justify-center">
+          <div className="flex flex-col py-2 items-start justify-center h-full border-y-2 p-2 w-[80%] px-7">
             <div className="flex items-center gap-5">
               <span className='cursor-pointer'>
                 <FaRegCircleUser size={50} />
@@ -131,7 +133,7 @@ function View() {
                 <h5 className="text-base font-normal">{views.category}</h5>
               </span>
             </div>
-            <div className="mt-5 flex justify-center items-center w-[80%] overflow-hidden rounded-lg  ">
+            <div className="mt-5 flex justify-center items-center w-[100%] overflow-hidden rounded-lg  ">
               <img src={views.image} alt={views.id} className="w-full h-full object-cover" />
             </div>
             <div className="flex gap-3 mt-3 ml-">
@@ -171,7 +173,7 @@ function View() {
                 {/* <h6 className=''>{likedPosts[id] || 0} Likes</h6> */}
                 <h6> {commentCounts} comments </h6>
               </span>
-              <span className="text-base font-normal w-full text-justify mt-4">
+              <span className="text-base font-normal  text-justify mt-4 w-[100%]">
                 {views.description}
               </span>
             </div>
@@ -207,19 +209,19 @@ function View() {
                     )}
                   </div>
                   <div className="border-t p-4">
-                    <textarea
-                      className="comment-input w-full rounded-md border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      placeholder="Add a comment..."
-                      rows="2"
-                    />
+                  <input
+                        type="text"
+                        className="flex-grow border border-gray-300 rounded-md px-4 py-2"
+                        placeholder="Add a comment..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
                     <button
-                      className="mt-2 text-blue-500 font-semibold"
-                      onClick={handleComment}
-                    >
-                      Post
-                    </button>
+                        className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
+                        onClick={() => handleComment(views.id)}
+                      >
+                        Post
+                      </button>
                   </div>
                 </div>
               </div>

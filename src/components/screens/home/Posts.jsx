@@ -1,11 +1,11 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa6";
 import { PiHeartStraightDuotone } from "react-icons/pi";
 import { SiSlideshare } from "react-icons/si";
-import { LuSendHorizonal } from "react-icons/lu";import axios from 'axios';
+import { LuSendHorizonal } from "react-icons/lu"; import axios from 'axios';
 import Cookies from 'js-cookie';
 import { LikedPostsContext } from '../../context/Context';
 
@@ -21,14 +21,15 @@ function Posts() {
   const { modelName } = useParams()
 
   const { likedPosts, handleLike, } = useContext(LikedPostsContext)
-  
+  const navigate = useNavigate()
+
   const likeCount = likedPosts[posts.id] || 0;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const token = Cookies.get('auth_token');
-  
+
         // Fetching api
         const [postsData, createPostData] = await Promise.all([
           axios.get('http://localhost:8000/api/v1/posts/', {
@@ -38,36 +39,36 @@ function Posts() {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
-  
-        
+
+
         const formattedCreatePosts = createPostData.data.map(post => ({
           ...post,
           source: 'createpost'
         }));
-  
+
         const allPosts = [
           ...postsData.data.data.map(post => ({ ...post, source: 'posts' })),
           ...formattedCreatePosts
         ];
-  
+
         setPosts(allPosts);
-  
+
       } catch (error) {
         console.error('Error fetching the posts:', error);
         setError(error);
       }
     };
-  
+
     fetchPosts();
   }, []);
-  
+
   // comments
   useEffect(() => {
     const fetchComments = async () => {
       try {
         setLoadingComments(true);
         const token = Cookies.get('auth_token');
-        
+
         const promises = posts.map((post) => {
           return axios.get(`http://localhost:8000/api/v1/comments/${post.id}/`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -76,21 +77,21 @@ function Posts() {
             return { data: [] };
           });
         });
-  
+
         const responses = await Promise.all(promises);
-        
+
         const comments = responses.reduce((acc, response, index) => {
           acc[posts[index].id] = response.data;
           return acc;
         }, {});
-        
+
         setPostComments(comments);
-  
+
         const counts = responses.reduce((acc, response, index) => {
           acc[posts[index].id] = response.data.length;
           return acc;
         }, {});
-        
+
         setCommentCounts(counts);
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -98,7 +99,7 @@ function Posts() {
         setLoadingComments(false);
       }
     };
-  
+
     if (posts.length) {
       fetchComments();
     }
@@ -118,12 +119,12 @@ function Posts() {
     try {
       const token = Cookies.get('auth_token');
       const contentTypeId = getContentTypeId(modelName);
-  
+
       if (!contentTypeId || !comment || !postId) {
         console.error('Invalid content type or missing data');
         return;
       }
-  
+
       const response = await axios.post('http://localhost:8000/api/v1/comments/', {
         content_type: contentTypeId,
         object_id: postId,
@@ -137,12 +138,12 @@ function Posts() {
 
       if (response.status === 201) {
         setComment('');
-        
+
         setPostComments((prevPostComments) => ({
           ...prevPostComments,
           [postId]: [...(prevPostComments[postId] || []), response.data]
         }));
-  
+
         setCommentCounts((prevCommentCounts) => ({
           ...prevCommentCounts,
           [postId]: (prevCommentCounts[postId] || 0) + 1
@@ -155,14 +156,29 @@ function Posts() {
     }
   };
 
+  const getLinkPath = (modelName, postId) => {
+    if (modelName === 'createpost' || modelName === 'posts') {
+      return `/view/${postId}`;
+    } else {
+      return `/${modelName}/view/${postId}`;
+    }
+  };
+  // const handlePost = (postId) => {
+  //   navigate(`/${modelName}/view/${postId}`, { modelName })
+  // }
+  const modelSlugMap = {
+    posts: 'blog',
+    createpost: 'articles',
+  };
+
   if (error) {
     return <div>Error loading posts. Please try again later.</div>;
   }
 
   return (
-    <div className='wrapper py-16  grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center menu-open'>
+    <div className='wrapper pb-16 pt-[100px] grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center menu-open'>
       {posts.map(post => (
-        <div key={post.id} className='flex flex-col py-2 w-full items-start border-b-2 pt-2 pb-4 h-[500px] max-[768px]:h-[400px]'>
+        <div key={post.id} className='flex flex-col  w-full items-start border-b-2 pt-2 pb-4 h-[500px] max-[768px]:h-[400px]'>
           <div className='flex items-center gap-5'>
             <span className='cursor-pointer'><FaRegCircleUser size={40} /></span>
             <span>
@@ -170,40 +186,31 @@ function Posts() {
               <h5 className='text-base font-normal'>{post.category}</h5>
             </span>
           </div>
-          <div className='mt-5 items-center w-full overflow-hidden rounded-lg'>
-            {/* <Link to={`/view/${post.id}`}>
-              <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
-            </Link> */}
+          <div className='mt-5 w-full  overflow-hidden rounded-lg h-full'>
             <Link
               to={
                 post.source === 'posts'
-                  ? `/posts/view/${post.id}`
-                  : `/createpost/view/${post.id}`
+                  ? `/posts/${post.id}`
+                  : `/createpost/${post.id}`
               }
-              state={{ modelName: post.source === "posts" ? "posts" : "createpost"}}   
+              state={{ modelName: post.source === "posts" ? "posts" : "createpost" }}
             >
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
-
-{/* <Link to={`/view?postId=${post.id}`} state={{ modelName: post.source === "posts" ? "posts" : "createpost"}}>
-  <img src={post.image} alt={post.id} className="w-full h-full object-cover" />
-</Link> */}
           </div>
           <div className='flex gap-3 mt-3 ml-'>
-      
-<span className='hover:text-slate-400'>
-      <PiHeartStraightDuotone
-        size={25}
-        style={{ fill: likedPosts[post.id] === 1 ? 'red' : 'black' ,
-          cursor: 'pointer',
-        }}
-        onClick={() => handleLike(post.id)}
-        title='like'
-      />
-      
-    </span>
-
-            <span 
+            <span className='hover:text-slate-400'>
+              <PiHeartStraightDuotone
+                size={25}
+                style={{
+                  fill: likedPosts[post.id] === 1 ? 'red' : 'black',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleLike(post.id)}
+                title='like'
+              />
+            </span>
+            <span
               onClick={() => setShowComment(showComment === post.id ? null : post.id)}
               className='cursor-pointer hover:text-slate-600'
               title='Comment'
@@ -251,20 +258,20 @@ function Posts() {
                   ))}
                   {!postComments[post.id]?.length && <div>No comments yet</div>}
                 </div>
-                <div className="border-t p-4">
-                  <textarea
-                    className="comment-input w-full rounded-md border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Add a comment..."
-                    rows="2"
-                  />
+                <div className="border-t p-4 flex items-center">
+                <input
+                        type="text"
+                        className="flex-grow border border-gray-300 rounded-md px-4 py-2"
+                        placeholder="Add a comment..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
                   <button
-                    className="mt-2 text-blue-500 font-semibold"
-                    onClick={() => handleComment(post.id, modelName)}
-                  >
-                    Post
-                  </button>
+                        className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
+                        onClick={() => handleComment(post.id)}
+                      >
+                        Post
+                      </button>
                 </div>
               </div>
             </div>
@@ -276,3 +283,8 @@ function Posts() {
 }
 
 export default Posts;
+
+
+{/* <Link to={`/view/${post.id}`}>
+              <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
+            </Link> */}
