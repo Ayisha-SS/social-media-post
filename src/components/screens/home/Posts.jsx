@@ -178,7 +178,7 @@ function Posts() {
   return (
     <div className='wrapper pb-16 pt-[100px] grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center menu-open'>
       {posts.map(post => (
-        <div key={post.id} className='flex flex-col  w-full items-start border-b-2 pt-2 pb-4 h-[500px] max-[768px]:h-[400px]'>
+        <div key={post.id} className='flex flex-col  w-full items-start pt-2 pb-4 px-2 rounded-lg hover:bg-purple-200 hover:shadow-gray-600 h-[500px] max-[768px]:h-[400px]'>
           <div className='flex items-center gap-5'>
             <span className='cursor-pointer'><FaRegCircleUser size={40} /></span>
             <span>
@@ -195,10 +195,10 @@ function Posts() {
               }
               state={{ modelName: post.source === "posts" ? "posts" : "createpost" }}
             >
-              <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
+              <img src={post.image} alt={post.id} className='w-full h-full' />
             </Link>
           </div>
-          <div className='flex gap-3 mt-3 ml-'>
+          <div className='flex gap-3 mt-3 ml-2'>
             <span className='hover:text-slate-400'>
               <PiHeartStraightDuotone
                 size={25}
@@ -219,15 +219,15 @@ function Posts() {
             </span>
             <span className='cursor-pointer hover:text-slate-600' title='Share'><LuSendHorizonal size={25} /></span>
           </div>
-          <span className="text-sm font-normal text-slate-800 mt-2 mb-1">
+          <span className="text-sm font-normal text-slate-800 mt-2 mb-1 ml-2">
             <h6 className=''>{likedPosts[post.id] || 0} Likes</h6>
             {/* <h6>{commentCounts[post.id] || 0} comments</h6> */}
           </span>
-          <span className='flex items-center'>
+          <span className='flex items-center ml-2'>
             <h6 className='text-[16px] font-bold cursor-pointer'>{post.created_by}</h6>
             <span className='text-[20px] font-normal ml-2'>{post.title}</span>
           </span>
-          <span className="text-sm font-normal text-slate-800 mt-1">
+          <span className="text-sm font-normal text-slate-800 mt-1 ml-2">
             {/* <h6 className=''>{likedPosts[post.id] || 0} Likes</h6> */}
             <h6>{commentCounts[post.id] || 0} comments</h6>
           </span>

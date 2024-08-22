@@ -9,7 +9,6 @@ import Cookies from 'js-cookie';
 import { LikedPostsContext } from '../../context/Context';
 import { Helmet } from "react-helmet";
 import Logo from '../../includes/navBar/Logo';
-import LinkButton from '../../general/LinkButton';
 
 function MyPosts() {
   const [posts, setPosts] = useState([]);
@@ -149,7 +148,7 @@ function MyPosts() {
       <div className='wrapper pb-16 pt-[100px] grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center'>
         {posts.length > 0 ? (
           posts.map(post => (
-            <div key={post.id} className='flex flex-col py-2 w-full items-start rounded-lg p-2 hover:bg-slate-200'>
+            <div key={post.id} className='flex flex-col py-2 w-full items-start  p-2'>
               <div className='flex items-center gap-5'>
                 {/* <span className='cursor-pointer'><FaRegCircleUser size={40} /></span> */}
                 <span>
