@@ -184,6 +184,10 @@ function Posts() {
             >
               <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
             </Link>
+
+{/* <Link to={`/view?postId=${post.id}`} state={{ modelName: post.source === "posts" ? "posts" : "createpost"}}>
+  <img src={post.image} alt={post.id} className="w-full h-full object-cover" />
+</Link> */}
           </div>
           <div className='flex gap-3 mt-3 ml-'>
       

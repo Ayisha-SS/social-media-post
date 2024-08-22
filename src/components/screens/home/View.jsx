@@ -2,12 +2,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { FaRegCircleUser } from "react-icons/fa6";
-import { FaHeart, FaRegComment } from "react-icons/fa";
+import { FaRegComment } from "react-icons/fa";
 import { PiHeartStraightDuotone } from "react-icons/pi";
-import { SiSlideshare } from "react-icons/si";
 import { LuSendHorizonal } from "react-icons/lu";
-
-import { useParams} from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Logo from '../../includes/navBar/Logo';
@@ -16,17 +14,17 @@ import { LikedPostsContext } from '../../context/Context';
 
 
 function View() {
-  
+
   const [views, setViews] = useState(null);
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(false);
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
-  // const [likeCount, setLikeCount] = useState(initialLikeCount);
+
+  const { id, modelName } = useParams();
   
-  const {  id, modelName} = useParams();
-  const { likedPosts, isLiked,  handleLike} = useContext(LikedPostsContext)
-  
+  const { likedPosts, handleLike } = useContext(LikedPostsContext)
+
   const likeCount = likedPosts[id] || 0;
 
   useEffect(() => {
@@ -46,7 +44,7 @@ function View() {
     const fetchComments = async () => {
       try {
         const token = Cookies.get('auth_token');
-        const response = await axios.get(`http://localhost:8000/api/v1/comments/${ id }/`, {
+        const response = await axios.get(`http://localhost:8000/api/v1/comments/${id}/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -57,7 +55,7 @@ function View() {
       }
     };
     fetchComments();
-  }, [ id ]);
+  }, [id]);
 
 
 
@@ -84,7 +82,7 @@ function View() {
         'http://localhost:8000/api/v1/comments/',
         {
           content_type: contentTypeId,
-          object_id:  id ,
+          object_id: id,
           content: comment,
         },
         {
@@ -121,9 +119,9 @@ function View() {
           <Logo />
         </div>
       </div>
-      <div className="pb-10 bg-gradient-to-r from-purple-400 to-pink-200">
+      <div className="pb-10 bg-gradient-to-r from-purple-400 to-pink-200 ">
         <div className="wrapper py-16">
-          <div className="flex flex-col py-2 w-full items-start h-full border-y-2 p-2">
+          <div className="flex flex-col py-2 items-start justify-center h-full border-y-2 p-2 w-[100%] px-7">
             <div className="flex items-center gap-5">
               <span className='cursor-pointer'>
                 <FaRegCircleUser size={50} />
@@ -133,40 +131,36 @@ function View() {
                 <h5 className="text-base font-normal">{views.category}</h5>
               </span>
             </div>
-            <div className="mt-5 items-center w-full overflow-hidden rounded-lg">
+            <div className="mt-5 flex justify-center items-center w-[80%] overflow-hidden rounded-lg  ">
               <img src={views.image} alt={views.id} className="w-full h-full object-cover" />
             </div>
             <div className="flex gap-3 mt-3 ml-">
-          
 
-<span className='hover:text-slate-400'>
-      <PiHeartStraightDuotone
-        size={25}
-        style={{ fill: likedPosts[id] === 1  ? 'red' : 'black' ,
-          cursor: 'pointer',
-        }}
-        onClick={() => handleLike(id)}
-        title='like'
-      />
-      
-    </span>
-              
-              <span 
+              <span className='hover:text-slate-400'>
+                <PiHeartStraightDuotone
+                  size={25}
+                  style={{
+                    fill: likedPosts[id] === 1 ? 'red' : 'black',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => handleLike(id)}
+                  title='like'
+                />
+              </span>
+              <span
                 onClick={() => setShowComment(!showComment)}
                 className='cursor-pointer hover:text-slate-600'
                 title='Comment'
-                >
+              >
                 <FaRegComment size={25} />
               </span>
-              
-              
               <span className='cursor-pointer hover:text-slate-600' title='Share'>
-              <LuSendHorizonal size={25} />
+                <LuSendHorizonal size={25} />
               </span>
             </div>
             <span className="text-sm font-normal text-slate-800 mt-2">
-            <h6 className=''>{likedPosts[id] || 0} Likes</h6>
-            {/* <h6> {commentCounts} comments </h6> */}
+              <h6 className=''>{likedPosts[id] || 0} Likes</h6>
+              {/* <h6> {commentCounts} comments </h6> */}
             </span>
             <div className="flex flex-col gap- my-2 w-full">
               <span className='flex items-center mb-2'>
@@ -174,15 +168,15 @@ function View() {
                 <span className="text-[18px] font-normal ml-2 ">{views.title}</span>
               </span>
               <span className="text-sm font-normal text-slate-800 mt-">
-            {/* <h6 className=''>{likedPosts[id] || 0} Likes</h6> */}
-            <h6> {commentCounts} comments </h6>
-            </span>
+                {/* <h6 className=''>{likedPosts[id] || 0} Likes</h6> */}
+                <h6> {commentCounts} comments </h6>
+              </span>
               <span className="text-base font-normal w-full text-justify mt-4">
                 {views.description}
               </span>
             </div>
             <span className="text-sm font-normal text-slate-500 mt-5">{views.created_at}</span>
-            
+
             {showComment && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
                 <div className="relative w-full h-full bg-white rounded-lg overflow-hidden md:w-[600px] md:h-[80%] flex flex-col">
