@@ -116,7 +116,7 @@ function View() {
       <Helmet>
         <title>PostFun | View</title>
       </Helmet>
-      <div className="py-4  fixed top-0 left-0 right-0 border-b-4 bg-slate-200 border-b-solid border-b-purple-500 shadow-2xl">
+      <div className="py-4  fixed top-0 left-0 right-0 border-b-2 bg-slate-100 border-b-solid border-b-purple-500 shadow-2xl">
         <div className="wrapper">
           <Logo />
         </div>

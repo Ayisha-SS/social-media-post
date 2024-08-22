@@ -23,7 +23,7 @@ function NavBar() {
     window.location.replace('/login')
   }
   return (
-    <div className='py-3 fixed top-0 left-0 right-0 border-b-4 border-b-purple-500 shadow-xl bg-slate-100'>
+    <div className='py-3 fixed top-0 left-0 right-0 border-b-2 border-b-purple-500 shadow-2xl bg-slate-100'>
       <div className='wrapper flex justify-between'>
         <Logo />
         <div className='flex gap-2 max-[480px]:flex-col'>

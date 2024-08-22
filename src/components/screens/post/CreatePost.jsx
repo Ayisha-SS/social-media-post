@@ -71,14 +71,14 @@ function CreatePost() {
       <Helmet>
         <title>PostFun|Create</title>
       </Helmet>
-      <div className='py-4 border-b-4 border-b-solid border-b-purple-500 shadow-md bg-slate-200'>
+      <div className='py-4 fixed top-0 left-0 right-0 border-b-2 border-b-solid border-b-purple-500 shadow-2xl bg-gradient-to-r from-purple-300 to-pink-300 '>
         <div className='wrapper'>
           <Logo />
         </div>
       </div>
-<div className='bg-gradient-to-r from-purple-400 to-pink-200'>
-      <div className='wrapper py-16 flex flex-col items-center justify-center  max-[540px]:justify-start'>
-        <div className='border border-slate-500 bg-slate-300 p-5 w-[70%] max-[768px]:w-[85%] '>
+<div className='bg-gradient-to-r from-purple-100 to-pink-100 '>
+      <div className='wrapper pb-16 pt-[100px] flex flex-col items-center justify-center  max-[540px]:justify-start'>
+        <div className='border border-slate-500 bg-gradient-to-r from-purple-400 to-pink-400 p-5 w-[70%] max-[768px]:w-[85%] '>
           <form action="" className='flex flex-col gap-5 max-[480px]:gap-3'
             onSubmit={handleSubmit}>
             <div className='flex flex-col gap-3'>
@@ -124,7 +124,7 @@ function CreatePost() {
           </form>
         </div>
         <div className='flex gap-2 pt-5'>
-          <button className='text-base text-slate-900 py-2 px-5 bg-violet-400 rounded-full'
+          <button className='text-base font-bold text-slate-900 py-2 px-5 border-2 border-violet-400 bg-white rounded-full hover:bg-gradient-to-r from-purple-400 to-pink-400'
             onClick={() => {
               setTitle('');
               setCategory('');
@@ -133,7 +133,7 @@ function CreatePost() {
             }}
           >
             Cancel</button>
-          <button className='text-base text-slate-900 py-2 px-7 bg-pink-500 rounded-full'
+          <button className='text-base font-bold text-slate-900 py-2 px-7 border-2 border-violet-400 bg-white rounded-full hover:bg-gradient-to-r from-purple-400 to-pink-400'
             onClick={handleSubmit}
           >Create</button>
         </div>
