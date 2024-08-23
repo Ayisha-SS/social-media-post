@@ -169,13 +169,10 @@ function Posts() {
             </span>
           </div>
           <div className='mt-5 w-full  overflow-hidden rounded-lg h-full'>
+
             <Link
-              to={
-                post.source === 'posts'
-                  ? `/posts/${post.id}`
-                  : `/createpost/${post.id}`
-              }
-              state={{ modelName: post.source === "posts" ? "posts" : "createpost" }}
+              to={`/view/${post.id}`}
+              state={{ modelName: post.source === 'posts' ? 'posts' : 'createpost' }}
             >
               <img src={post.image} alt={post.id} className='w-full h-full' />
             </Link>
@@ -241,19 +238,19 @@ function Posts() {
                   {!postComments[post.id]?.length && <div>No comments yet</div>}
                 </div>
                 <div className="border-t p-4 flex items-center">
-                <input
-                        type="text"
-                        className="flex-grow border border-gray-300 rounded-md px-4 py-2"
-                        placeholder="Add a comment..."
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                      />
+                  <input
+                    type="text"
+                    className="flex-grow border border-gray-300 rounded-md px-4 py-2"
+                    placeholder="Add a comment..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
                   <button
-                        className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
-                        onClick={() => handleComment(post.id)}
-                      >
-                        Post
-                      </button>
+                    className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
+                    onClick={() => handleComment(post.id)}
+                  >
+                    Post
+                  </button>
                 </div>
               </div>
             </div>
@@ -267,6 +264,3 @@ function Posts() {
 export default Posts;
 
 
-{/* <Link to={`/view/${post.id}`}>
-              <img src={post.image} alt={post.id} className='w-full h-full object-cover' />
-            </Link> */}

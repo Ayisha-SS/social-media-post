@@ -40,7 +40,6 @@ function App() {
           <>          
           <Route path='/' element={<Home />} />
           <Route path="/:modelName/:id" element={<View />} />
-          {/* <Route path={`/${modelName}/:id`} element={<View />} /> */}
           </>
 
         )}

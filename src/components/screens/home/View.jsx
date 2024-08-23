@@ -22,7 +22,9 @@ function View() {
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
 
-  const { id, modelName, contentType, } = useParams();
+  const { id, title,contentType, } = useParams();
+  const location = useLocation();
+  const { modelName } = location.state;
 
   const { likedPosts, handleLike } = useContext(LikedPostsContext)
 
@@ -39,7 +41,6 @@ function View() {
     };
     fetchPost();
   }, [id, modelName]);
-
 
 
   // Fetch comments for the post
