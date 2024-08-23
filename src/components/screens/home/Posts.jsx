@@ -160,7 +160,7 @@ function Posts() {
   return (
     <div className='wrapper pb-16 pt-[100px] grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center menu-open'>
       {posts.map(post => (
-        <div key={post.id} className='flex flex-col  w-full items-start pt-2 pb-4 px-2 rounded-lg hover:bg-gradient-to-r from-purple-50 to-pink-50 hover:shadow-gray-600 h-[500px] max-[768px]:h-[400px]'>
+        <div key={post.id} className='flex flex-col  w-full items-start pt-2 pb-4 px-2 rounded-lg hover:border hover:-translate-y-1 hover:shadow-gray-600 h-[500px] max-[768px]:h-[400px]'>
           <div className='flex items-center gap-5'>
             <span className='cursor-pointer'><FaRegCircleUser size={40} /></span>
             <span>

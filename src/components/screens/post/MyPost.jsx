@@ -141,7 +141,7 @@ function MyPosts() {
       <Helmet>
         <title>PostFun | My Posts</title>
       </Helmet>
-      <div className='py-4 fixed top-0 left-0 right-0 border-b-2 border-b-solid border-b-purple-500 shadow-2xl bg-slate-100'>
+      <div className='py-4 fixed top-0 left-0 right-0 border-b-2 border-b-solid z-10 border-b-purple-500 shadow-2xl bg-slate-100'>
         <div className='wrapper flex justify-between'>
           <Logo />
           <LinkButton to="/create" text="Create Post" className="bg-gradient-to-r from-purple-600 to-pink-500 " textColor="slate-900" />
@@ -151,7 +151,7 @@ function MyPosts() {
         <div className='wrapper pb-16 pt-[100px] grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center'>
           {posts.length > 0 ? (
             posts.map(post => (
-              <div key={post.id} className='flex flex-col py-2 w-full items-start rounded-lg p-4 hover:bg-gradient-to-r from-purple-100 to-pink-100'>
+              <div key={post.id} className='flex flex-col py-2 w-full items-start rounded-lg p-4 hover:border-2 hover:-translate-y-1'>
                 <div className='flex items-center gap-5'>
                   {/* <span className='cursor-pointer'><FaRegCircleUser size={40} /></span> */}
                   <span>

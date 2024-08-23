@@ -71,7 +71,7 @@ function CreatePost() {
       <Helmet>
         <title>PostFun|Create</title>
       </Helmet>
-      <div className='py-4 fixed top-0 left-0 right-0 border-b-2 border-b-solid border-b-purple-500 shadow-2xl bg-gradient-to-r from-purple-300 to-pink-300 '>
+      <div className='py-4 fixed top-0 left-0 right-0 border-b-2 border-b-solid z-10 border-b-purple-500 shadow-2xl bg-gradient-to-r from-purple-300 to-pink-300 '>
         <div className='wrapper'>
           <Logo />
         </div>
