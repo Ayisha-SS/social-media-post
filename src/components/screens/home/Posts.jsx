@@ -79,7 +79,6 @@ function Posts() {
         });
 
         const responses = await Promise.all(promises);
-
         const comments = responses.reduce((acc, response, index) => {
           acc[posts[index].id] = response.data;
           return acc;
@@ -104,8 +103,6 @@ function Posts() {
       fetchComments();
     }
   }, [posts]);
-
-
 
   const getContentTypeId = (modelName) => {
     const contentTypeMap = {
@@ -155,8 +152,6 @@ function Posts() {
       console.error('Error adding comment:', error.response ? error.response.data : error.message);
     }
   };
-
-
 
   if (error) {
     return <div>Error loading posts. Please try again later.</div>;

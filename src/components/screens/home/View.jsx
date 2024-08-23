@@ -6,6 +6,7 @@ import { FaRegComment } from "react-icons/fa";
 import { PiHeartStraightDuotone } from "react-icons/pi";
 import { LuSendHorizonal } from "react-icons/lu";
 import { useParams, useLocation } from 'react-router-dom';
+import { formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Logo from '../../includes/navBar/Logo';
@@ -21,8 +22,8 @@ function View() {
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
 
-  const { id, modelName, contentType,  } = useParams();
-  
+  const { id, modelName, contentType, } = useParams();
+
   const { likedPosts, handleLike } = useContext(LikedPostsContext)
 
   const likeCount = likedPosts[id] || 0;
@@ -177,7 +178,9 @@ function View() {
                 {views.description}
               </span>
             </div>
-            <span className="text-sm font-normal text-slate-500 mt-5">{views.created_at}</span>
+            <span className="text-sm font-normal text-slate-500 mt-5">
+              {formatDistanceToNow(new Date(views.created_at), { addSuffix: true })}
+            </span>
 
             {showComment && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
@@ -209,19 +212,19 @@ function View() {
                     )}
                   </div>
                   <div className="border-t p-4">
-                  <input
-                        type="text"
-                        className="flex-grow border border-gray-300 rounded-md px-4 py-2"
-                        placeholder="Add a comment..."
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                      />
+                    <input
+                      type="text"
+                      className="flex-grow border border-gray-300 rounded-md px-4 py-2"
+                      placeholder="Add a comment..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
                     <button
-                        className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
-                        onClick={() => handleComment(views.id)}
-                      >
-                        Post
-                      </button>
+                      className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
+                      onClick={() => handleComment(views.id)}
+                    >
+                      Post
+                    </button>
                   </div>
                 </div>
               </div>
