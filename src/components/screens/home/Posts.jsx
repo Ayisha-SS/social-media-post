@@ -5,7 +5,8 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa6";
 import { PiHeartStraightDuotone } from "react-icons/pi";
 import { SiSlideshare } from "react-icons/si";
-import { LuSendHorizonal } from "react-icons/lu"; import axios from 'axios';
+import { LuSendHorizonal } from "react-icons/lu"; 
+import axios from 'axios';
 import Cookies from 'js-cookie';
 import { LikedPostsContext } from '../../context/Context';
 
@@ -18,12 +19,9 @@ function Posts() {
   const [postComments, setPostComments] = useState({});
   const [commentCounts, setCommentCounts] = useState({});
   const [loadingComments, setLoadingComments] = useState({});
-  const { modelName } = useParams()
+  const navigate = useNavigate();
 
-  const { likedPosts, handleLike, } = useContext(LikedPostsContext)
-  const navigate = useNavigate()
-
-  const likeCount = likedPosts[posts.id] || 0;
+  const { modelName } = useParams();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -39,7 +37,6 @@ function Posts() {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
-
 
         const formattedCreatePosts = createPostData.data.map(post => ({
           ...post,
@@ -62,7 +59,7 @@ function Posts() {
     fetchPosts();
   }, []);
 
-  // comments
+  // Fetch comments
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -153,6 +150,51 @@ function Posts() {
     }
   };
 
+
+
+  const handleLike = async (postId) => {
+    try {
+      const token = Cookies.get('auth_token');
+      const userId = Cookies.get('user_id');
+      const contentTypeId = getContentTypeId(modelName);
+
+      if (!postId || !contentTypeId || !userId) {
+        console.error('Missing required parameters for like request.');
+        return;
+      }
+
+      const response = await axios.post('http://localhost:8000/api/v1/like/', {
+        post_id: postId,
+        content_type_id: contentTypeId,
+        user_id: userId,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Like response status:', response.status);
+      console.log('Like response data:', response.data);
+
+      const { message, like_count } = response.data;
+
+      if (response.status === 201 || response.status === 200) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId ? { ...post, likes: like_count, liked: message === 'Post liked.' } : post
+          )
+        );
+      } else {
+        console.log('Unexpected status code:', response.status);
+      }
+    } catch (error) {
+      console.error('Error liking the post:', error.response ? error.response.data : error.message);
+    }
+  };
+  
+
+
   if (error) {
     return <div>Error loading posts. Please try again later.</div>;
   }
@@ -169,7 +211,6 @@ function Posts() {
             </span>
           </div>
           <div className='mt-5 w-full  overflow-hidden rounded-lg h-full'>
-
             <Link
               to={`/view/${post.id}`}
               state={{ modelName: post.source === 'posts' ? 'posts' : 'createpost' }}
@@ -182,7 +223,7 @@ function Posts() {
               <PiHeartStraightDuotone
                 size={25}
                 style={{
-                  fill: likedPosts[post.id] === 1 ? 'red' : 'black',
+                  fill: post.liked  ? 'red' : 'black',
                   cursor: 'pointer',
                 }}
                 onClick={() => handleLike(post.id)}
@@ -199,57 +240,45 @@ function Posts() {
             <span className='cursor-pointer hover:text-slate-600' title='Share'><LuSendHorizonal size={25} /></span>
           </div>
           <span className="text-sm font-normal text-slate-800 mt-2 mb-1 ml-2">
-            <h6 className=''>{likedPosts[post.id] || 0} Likes</h6>
-            {/* <h6>{commentCounts[post.id] || 0} comments</h6> */}
+            <h6>{post.likes} Likes</h6>
+            {/* <h6>Liked: {post.liked ? 'Yes' : 'No'}</h6> */}
           </span>
           <span className='flex items-center ml-2'>
             <h6 className='text-[16px] font-bold cursor-pointer'>{post.created_by}</h6>
             <span className='text-[20px] font-normal ml-2'>{post.title}</span>
           </span>
           <span className="text-sm font-normal text-slate-800 mt-1 ml-2">
-            {/* <h6 className=''>{likedPosts[post.id] || 0} Likes</h6> */}
             <h6>{commentCounts[post.id] || 0} comments</h6>
           </span>
 
           {showComment === post.id && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-              <div className="relative w-full h-full bg-white rounded-lg overflow-hidden md:w-[600px] md:h-[80%] flex flex-col">
-                <div className="flex justify-between items-center p-4 border-b">
-                  <h2 className="text-lg font-semibold">Comments</h2>
-                  <button
-                    className="text-gray-600 hover:text-gray-900"
-                    onClick={() => setShowComment(null)}
-                  >
-                    &times;
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4">
-                  {postComments[post.id]?.map((comment) => (
-                    <div key={comment.id} className="comment flex items-start gap-3 mb-3">
-                      <div className="avatar">
-                        <FaRegCircleUser size={25} />
+            <div className='w-full h-[30%] rounded-lg relative bg-slate-50'>
+              <div className="absolute inset-0 bg-white p-2 rounded-lg">
+                {loadingComments[post.id] ? (
+                  <div>Loading...</div>
+                ) : (
+                  <div className='overflow-y-scroll h-[100px]'>
+                    {postComments[post.id] && postComments[post.id].map((comment) => (
+                      <div key={comment.id}>
+                        <span className='text-[16px] font-bold cursor-pointer'>{comment.created_by}</span>
+                        <p className='text-[14px] ml-2'>{comment.content}</p>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-sm">{comment.created_by}</span>
-                        <span className="text-sm">{comment.content}</span>
-                      </div>
-                    </div>
-                  ))}
-                  {!postComments[post.id]?.length && <div>No comments yet</div>}
-                </div>
-                <div className="border-t p-4 flex items-center">
+                    ))}
+                  </div>
+                )}
+                <div className='flex items-center mt-3 gap-3 px-2'>
                   <input
-                    type="text"
-                    className="flex-grow border border-gray-300 rounded-md px-4 py-2"
-                    placeholder="Add a comment..."
+                    type='text'
+                    placeholder='Add a comment'
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
+                    className='w-full px-2 py-1 rounded-md border border-slate-300'
                   />
                   <button
-                    className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
-                    onClick={() => handleComment(post.id)}
+                    onClick={() => handleComment(post.id, post.source)}
+                    className='px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600'
                   >
-                    Post
+                    Comment
                   </button>
                 </div>
               </div>

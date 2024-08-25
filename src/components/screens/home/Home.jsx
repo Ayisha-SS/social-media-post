@@ -3,6 +3,7 @@ import {Helmet} from "react-helmet";
 import NavBar from '../../includes/navBar/NavBar';
 import Posts from './Posts';
 import Footer from '../../footer/Footer';
+import Like from './Like';
 
 function Home() {
 
