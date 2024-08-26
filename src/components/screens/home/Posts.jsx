@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa6";
 import { PiHeartStraightDuotone } from "react-icons/pi";
@@ -18,11 +18,14 @@ function Posts() {
   const [postComments, setPostComments] = useState({});
   const [commentCounts, setCommentCounts] = useState({});
   const [loadingComments, setLoadingComments] = useState({});
+  const [userLikes, setUserLikes] = useState({});
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const token = Cookies.get('auth_token');
+        const userId = Cookies.get('user_id');
+
         const [postsData, createPostData] = await Promise.all([
           axios.get('http://localhost:8000/api/v1/posts/', { headers: { Authorization: `Bearer ${token}` } }),
           axios.get('http://localhost:8000/api/v1/createpost/', { headers: { Authorization: `Bearer ${token}` } })
@@ -39,9 +42,11 @@ function Posts() {
 
         setPosts(allPosts.map(post => ({
           ...post,
-          liked: likedPosts[post.id] || false,
+          liked: likedPosts[post.id] && likedPosts[post.id][userId],
           likes: likeCounts[post.id] || post.likes || 0
         })));
+        setUserLikes(likedPosts);
+
       } catch (error) {
         console.error('Error fetching the posts:', error);
         setError('Error fetching the posts. Please try again later.');
@@ -168,7 +173,6 @@ function Posts() {
       if (response.status === 201 || response.status === 200) {
         const liked = message === 'Post liked.';
 
-
         setPosts(prevPosts =>
           prevPosts.map(post =>
             post.id === postId
@@ -177,15 +181,20 @@ function Posts() {
           )
         );
 
-
         const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
         const likeCounts = JSON.parse(localStorage.getItem('likeCounts')) || {};
 
-        likedPosts[postId] = liked;
+        if (!likedPosts[postId]) {
+          likedPosts[postId] = {};
+        }
+
+        likedPosts[postId][userId] = liked;
         likeCounts[postId] = like_count;
 
         localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
         localStorage.setItem('likeCounts', JSON.stringify(likeCounts));
+        
+        setUserLikes(likedPosts);
 
         console.log("Updated localStorage:", likedPosts);
       } else {
@@ -229,10 +238,9 @@ function Posts() {
           </div>
           <div className='flex gap-3 mt-3 ml-2'>
             <span className='hover:text-slate-400'>
-              <PiHeartStraightDuotone
+            <PiHeartStraightDuotone
                 size={25}
-                style={{
-                  fill: post.liked ? 'red' : 'black',
+                style={{ color: post.liked ? 'red' : 'black' ,
                   cursor: 'pointer',
                 }}
                 onClick={() => handleLike(post.id)}
@@ -303,6 +311,7 @@ function Posts() {
               </div>
             </div>
           )}
+
         </div>
       ))}
     </div>

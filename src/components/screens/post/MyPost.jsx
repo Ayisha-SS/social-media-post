@@ -1,13 +1,12 @@
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {  useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaRegCircleUser, FaRegComment } from "react-icons/fa6";
 import { PiHeartStraightDuotone } from "react-icons/pi";
 import { LuSendHorizonal } from "react-icons/lu";
 import { formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { LikedPostsContext } from '../../context/Context';
 import { Helmet } from "react-helmet";
 import Logo from '../../includes/navBar/Logo';
 import LinkButton from '../../general/LinkButton';
@@ -22,7 +21,7 @@ function MyPosts() {
   const [commentCounts, setCommentCounts] = useState({});
   const [likedPosts, setLikedPosts] = useState({});
   const [likeCounts, setLikeCounts] = useState({});
-  const navigate = useNavigate();
+  const [userLikes, setUserLikes] = useState({});
 
   const token = Cookies.get('auth_token');
   const currentUsername = Cookies.get('username');
@@ -36,6 +35,8 @@ function MyPosts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        const userId = Cookies.get('user_id');
+
         const response = await axiosInstance.get('http://localhost:8000/api/v1/createpost/');
         const userPosts = response.data.filter(post => post.created_by === currentUsername);
 
@@ -45,9 +46,10 @@ function MyPosts() {
 
         setPosts(userPosts.map(post => ({
           ...post,
-          liked: storedLikedPosts[post.id] || false,
+          liked: likedPosts[post.id] && likedPosts[post.id][userId],
           likes: storedLikeCounts[post.id] || post.likes || 0
         })));
+        setUserLikes(likedPosts);
 
         setLikedPosts(storedLikedPosts);
         setLikeCounts(storedLikeCounts);
@@ -185,8 +187,17 @@ function MyPosts() {
         setLikedPosts(updatedLikedPosts);
         setLikeCounts(updatedLikeCounts);
 
+        if (!likedPosts[postId]) {
+          likedPosts[postId] = {};
+        }
+
+        likedPosts[postId][userId] = liked;
+        likeCounts[postId] = like_count;
+
         localStorage.setItem('likedPosts', JSON.stringify(updatedLikedPosts));
         localStorage.setItem('likeCounts', JSON.stringify(updatedLikeCounts));
+
+        setUserLikes(likedPosts);
 
         console.log("Updated localStorage:", updatedLikedPosts);
       } else {
@@ -241,7 +252,7 @@ function MyPosts() {
                     <PiHeartStraightDuotone
                       size={25}
                       style={{
-                        fill: post.liked ? 'red' : 'black',
+                        color: post.liked ? 'red' : 'black',
                         cursor: 'pointer',
                       }}
                       onClick={() => handleLike(post.id)}

@@ -1,5 +1,5 @@
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
@@ -19,6 +19,7 @@ function View() {
   const [showComment, setShowComment] = useState(false);
   const [postComments, setPostComments] = useState([]);
   const [commentCounts, setCommentCounts] = useState(0);
+  const [userLikes, setUserLikes] = useState({});
 
   const { id } = useParams();
   const location = useLocation();
@@ -28,6 +29,8 @@ function View() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
+        const userId = Cookies.get('user_id');
+
         const response = await axios.get(`http://localhost:8000/api/v1/${modelName}/view/${id}/`);
         const post = response.data.data;
 
@@ -37,9 +40,11 @@ function View() {
 
         setViews({
           ...post,
-          liked: likedPosts[post.id] || false,
+          liked: likedPosts[post.id] && likedPosts[post.id][userId],
           likes: likeCounts[post.id] || post.likes || 0
         });
+        setUserLikes(likedPosts);
+
       } catch (error) {
         console.error('Error fetching the post:', error);
       }
@@ -144,11 +149,18 @@ function View() {
         const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
         const likeCounts = JSON.parse(localStorage.getItem('likeCounts')) || {};
 
-        likedPosts[postId] = liked;
+        if (!likedPosts[postId]) {
+          likedPosts[postId] = {};
+        }
+
+        likedPosts[postId][userId] = liked;
         likeCounts[postId] = like_count;
 
         localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
         localStorage.setItem('likeCounts', JSON.stringify(likeCounts));
+
+        setUserLikes(likedPosts);
+
       } else {
         console.log('Unexpected status code:', response.status);
       }
@@ -156,8 +168,6 @@ function View() {
       console.error('Error liking the post:', error.response ? error.response.data : error.message);
     }
   };
-
-
 
   if (!views) {
     return <div>Loading...</div>;
@@ -193,7 +203,7 @@ function View() {
                 <PiHeartStraightDuotone
                   size={25}
                   style={{
-                    fill: views.liked ? 'red' : 'black',
+                    color: views.liked ? 'red' : 'black',
                     cursor: 'pointer',
                   }}
                   onClick={() => handleLike(views.id)}
