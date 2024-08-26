@@ -14,7 +14,7 @@
   }
 
 
-  .comment-section {
+  /* .comment-section {
     padding: 16px;
     border-bottom: 1px solid #ddd;
   }
@@ -80,7 +80,7 @@
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
-  }
+  } */
   @media (max-width: 480px) {
     .max-480 {
     @apply text-base

@@ -1,14 +1,13 @@
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa6";
 import { PiHeartStraightDuotone } from "react-icons/pi";
-import { SiSlideshare } from "react-icons/si";
-import { LuSendHorizonal } from "react-icons/lu"; 
+import { formatDistanceToNow } from 'date-fns';
+import { LuSendHorizonal } from "react-icons/lu";
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { LikedPostsContext } from '../../context/Context';
 
 
 function Posts() {
@@ -19,7 +18,6 @@ function Posts() {
   const [postComments, setPostComments] = useState({});
   const [commentCounts, setCommentCounts] = useState({});
   const [loadingComments, setLoadingComments] = useState({});
-  const { modelName } = useParams();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -53,6 +51,7 @@ function Posts() {
     fetchPosts();
   }, []);
 
+  // comment..
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -147,12 +146,12 @@ function Posts() {
       const token = Cookies.get('auth_token');
       const userId = Cookies.get('user_id');
       const post = posts.find(p => p.id === postId);
-      
+
       if (!post || !userId) {
         console.error('Missing required parameters for like request.');
         return;
       }
-  
+
       const response = await axios.post(
         'http://localhost:8000/api/v1/like/',
         {
@@ -163,13 +162,13 @@ function Posts() {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
         }
       );
-  
+
       const { message, like_count } = response.data;
-  
+
       if (response.status === 201 || response.status === 200) {
         const liked = message === 'Post liked.';
-        
-        // Update the posts state
+
+
         setPosts(prevPosts =>
           prevPosts.map(post =>
             post.id === postId
@@ -177,8 +176,8 @@ function Posts() {
               : post
           )
         );
-  
-        // Update localStorage
+
+
         const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
         const likeCounts = JSON.parse(localStorage.getItem('likeCounts')) || {};
 
@@ -187,7 +186,7 @@ function Posts() {
 
         localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
         localStorage.setItem('likeCounts', JSON.stringify(likeCounts));
-  
+
         console.log("Updated localStorage:", likedPosts);
       } else {
         console.log('Unexpected status code:', response.status);
@@ -196,6 +195,14 @@ function Posts() {
       console.error('Error liking the post:', error.response ? error.response.data : error.message);
     }
   };
+
+  useEffect(() => {
+    if (showComment !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [showComment]);
 
   if (error) {
     return <div>{error}</div>;
@@ -247,26 +254,53 @@ function Posts() {
           <span className='text-sm font-normal text-slate-800 mb-1 ml-2'>
             <h6>{commentCounts[post.id] || 0} Comments</h6>
           </span>
+
           {showComment === post.id && (
-            <div className='comments-section mt-2'>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder='Write a comment...'
-                className='w-full h-20 p-2 border rounded-lg'
-              />
-              <button
-                onClick={() => handleComment(post.id, post.source)}
-                className='w-full py-2 mt-2 bg-blue-500 text-white rounded-lg'
-                disabled={loadingComments[post.id]}
-              >
-                {loadingComments[post.id] ? 'Posting...' : 'Post Comment'}
-              </button>
-              {postComments[post.id] && postComments[post.id].map(comment => (
-                <div key={comment.id} className='comment p-2 border-b'>
-                  <p>{comment.content}</p>
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center ">
+              <div className="relative w-full h-full bg-white rounded-lg overflow-hidden md:w-[600px] md:h-[80%] flex flex-col">
+                <div className="flex justify-between items-center p-4 border-b">
+                  <h2 className="text-lg font-semibold">Comments</h2>
+                  <button
+                    className="text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowComment(null)}
+                  >
+                    &times;
+                  </button>
                 </div>
-              ))}
+                <div className="flex-1 overflow-y-auto p-4">
+                  {postComments[post.id]?.map(comment => (
+                    <div key={comment.id} className="border-b py-2">
+                      <div className="flex items-start gap-2">
+                        <FaRegCircleUser size={30} />
+                        <div className='flex flex-col'>
+                          <div className='flex'>
+                            <h4 className="font-semibold mr-3">{comment.created_by}</h4>
+                            <p>{comment.content}</p>
+                          </div>
+                          <div>
+                            <span className="text-xs text-gray-500">{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t p-4 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={comment[post.id] || ''}
+                    onChange={(e) => setComment({ ...comment, [post.id]: e.target.value })}
+                    placeholder="Add a comment..."
+                    className="flex-1 border rounded-lg p-2"
+                  />
+                  <button
+                    onClick={() => handleComment(post.id, post.source)}
+                    className="ml-4 bg-purple-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Post
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -276,5 +310,3 @@ function Posts() {
 };
 
 export default Posts;
-
-
